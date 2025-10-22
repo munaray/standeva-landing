@@ -131,7 +131,6 @@ export const SecondaryButton = styled(motion.button)`
 
 export const HeroVisual = styled(motion.div)`
 	position: relative;
-	border: red solid 2px;
 	height: 600px;
 	display: flex;
 	align-items: center;
@@ -162,7 +161,6 @@ export const FloatingElement = styled(motion.div)`
 
 export const HexagonContainer = styled(motion.div)`
 	position: absolute;
-	border: red solid 1px;
 	width: 80px;
 	height: 80px;
 	display: flex;

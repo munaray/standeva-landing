@@ -109,10 +109,14 @@ const Hero: React.FC = () => {
 	const [particles, setParticles] = useState<
 		Array<{ id: number; x: number; y: number; delay: number }>
 	>([]);
-	const [activeCodeIndex, setActiveCodeIndex] = useState(0);
+	const [, setActiveCodeIndex] = useState(0);
 	const [currentPlatformIndex, setCurrentPlatformIndex] = useState(0);
 	const [displayedText, setDisplayedText] = useState("");
 	const [isTyping, setIsTyping] = useState(true);
+	const [currentSnippetIndex, setCurrentSnippetIndex] = useState(0);
+	const [displayedCode, setDisplayedCode] = useState("");
+	const [isCodeTyping, setIsCodeTyping] = useState(true);
+	const [showCursor, setShowCursor] = useState(true);
 
 	useEffect(() => {
 		const newParticles = Array.from({ length: 25 }, (_, i) => ({
@@ -132,7 +136,7 @@ const Hero: React.FC = () => {
 
 	useEffect(() => {
 		const currentWord = platformVariants[currentPlatformIndex];
-		let timeouts: NodeJS.Timeout[] = [];
+		const timeouts: NodeJS.Timeout[] = [];
 
 		if (isTyping) {
 			currentWord.split("").forEach((char, index) => {
@@ -168,6 +172,54 @@ const Hero: React.FC = () => {
 			timeouts.forEach(clearTimeout);
 		};
 	}, [currentPlatformIndex, isTyping]);
+
+	useEffect(() => {
+		const currentSnippet = codeSnippets[currentSnippetIndex];
+		const currentCodeText = currentSnippet.code;
+		const timeouts: NodeJS.Timeout[] = [];
+
+		if (isCodeTyping) {
+			currentCodeText.split("").forEach((char, index) => {
+				const timeout = setTimeout(() => {
+					setDisplayedCode((prev) => prev + char);
+					if (index === currentCodeText.length - 1) {
+						const pauseTimeout = setTimeout(() => {
+							setIsCodeTyping(false);
+						}, 2000);
+						timeouts.push(pauseTimeout);
+					}
+				}, index * 50);
+				timeouts.push(timeout);
+			});
+		} else {
+			for (let i = currentCodeText.length; i >= 0; i--) {
+				const timeout = setTimeout(() => {
+					setDisplayedCode(currentCodeText.slice(0, i));
+					if (i === 0) {
+						setTimeout(() => {
+							setCurrentSnippetIndex(
+								(prev) => (prev + 1) % codeSnippets.length
+							);
+							setIsCodeTyping(true);
+						}, 300);
+					}
+				}, (currentCodeText.length - i) * 25);
+				timeouts.push(timeout);
+			}
+		}
+
+		return () => {
+			timeouts.forEach(clearTimeout);
+		};
+	}, [currentSnippetIndex, isCodeTyping]);
+
+	useEffect(() => {
+		const cursorInterval = setInterval(() => {
+			setShowCursor((prev) => !prev);
+		}, 500);
+
+		return () => clearInterval(cursorInterval);
+	}, []);
 
 	const titleVariants: Variants = {
 		hidden: { opacity: 0, y: 30 },
@@ -219,20 +271,6 @@ const Hero: React.FC = () => {
 		},
 	};
 
-	const hexagonVariants: Variants = {
-		hidden: { scale: 0, rotate: -180, opacity: 0 },
-		visible: (delay: number) => ({
-			scale: 1,
-			rotate: 0,
-			opacity: 1,
-			transition: {
-				duration: 0.8,
-				delay: delay,
-				ease: "easeOut",
-			},
-		}),
-	};
-
 	const Hexagon: React.FC<{
 		tech: (typeof techIcons)[0];
 		position: (typeof hexagonPositions)[0];
@@ -240,13 +278,7 @@ const Hero: React.FC = () => {
 		const IconComponent = tech.icon;
 
 		return (
-			<HexagonContainer
-				style={{ left: position.x, top: position.y }}
-				variants={hexagonVariants}
-				initial=""
-				animate="visible"
-				custom={position.delay}
-				whileHover={{ scale: 1.1, rotate: 10 }}>
+			<HexagonContainer style={{ left: position.x, top: position.y }}>
 				<HexagonSVG viewBox="0 0 100 100">
 					<defs>
 						<linearGradient
@@ -282,30 +314,27 @@ const Hero: React.FC = () => {
 						transform: "translate(-50%, -50%)",
 						color: tech.color,
 						filter: "drop-shadow(0 2px 4px rgba(0,0,0,0.3))",
-					}}>
+					}} className="animate-pulse">
 					<IconComponent size={24} />
 				</div>
 			</HexagonContainer>
 		);
 	};
 
-	const CodeBlock: React.FC<{
-		snippet: (typeof codeSnippets)[0];
-		isActive: boolean;
-		index: number;
-	}> = ({ snippet, isActive, index }) => (
-		<motion.div
-			initial={{ opacity: 1, y: 20 }}
-			animate={{
-				opacity: isActive ? 1 : 0,
-				y: isActive ? 0 : 20,
-				scale: isActive ? 1 : 0.9,
-			}}
-			transition={{
-				duration: 0.6,
-				ease: "easeOut",
-				delay: isActive ? 0.2 : 0,
-			}}
+	const highlightSyntax = (code: string) => {
+		return code
+			.replace(/('.*?'|".*?")/g, '<span style="color: #22c55e">$1</span>')
+			.replace(
+				/\b(fetch|method|import|const|await|from|new)\b/g,
+				'<span style="color: #3b82f6">$1</span>'
+			)
+			.replace(/(\{|\}|\[|\])/g, '<span style="color: #eab308">$1</span>')
+			.replace(/\b(\d+)\b/g, '<span style="color: #f97316">$1</span>')
+			.replace(/(\/\/.*$)/gm, '<span style="color: #6b7280">$1</span>');
+	};
+
+	const CodeBlock: React.FC = () => (
+		<div
 			style={{
 				position: "absolute",
 				background: "rgba(15, 23, 42, 0.95)",
@@ -318,11 +347,9 @@ const Hero: React.FC = () => {
 				width: "380px",
 				backdropFilter: "blur(15px)",
 				boxShadow: "0 8px 32px rgba(0, 0, 0, 0.4)",
-				top: `${50 + index * 15}%`,
-				right: "0",
-				zIndex: isActive ? 15 : 5,
-				transform: "translateY(-50%)",
-				display: isActive ? "block" : "none",
+				top: "68%",
+				right: "11%",
+				zIndex: 15,
 			}}>
 			<div
 				style={{
@@ -331,7 +358,7 @@ const Hero: React.FC = () => {
 					marginBottom: "0.75rem",
 					fontSize: "0.9rem",
 				}}>
-				{snippet.title}
+				{codeSnippets[currentSnippetIndex].title}
 			</div>
 			<pre
 				style={{
@@ -339,9 +366,16 @@ const Hero: React.FC = () => {
 					whiteSpace: "pre-wrap",
 					lineHeight: "1.4",
 				}}>
-				{snippet.code}
+				<span
+					dangerouslySetInnerHTML={{
+						__html: highlightSyntax(displayedCode),
+					}}
+				/>
+				{showCursor && isCodeTyping && (
+					<span style={{ color: "#3b82f6" }}>|</span>
+				)}
 			</pre>
-		</motion.div>
+		</div>
 	);
 
 	return (
@@ -528,14 +562,7 @@ const Hero: React.FC = () => {
 						/>
 					))}
 
-					{codeSnippets.map((snippet, index) => (
-						<CodeBlock
-							key={snippet.title}
-							snippet={snippet}
-							isActive={index === activeCodeIndex}
-							index={index}
-						/>
-					))}
+					<CodeBlock />
 
 					<FloatingElement
 						style={{

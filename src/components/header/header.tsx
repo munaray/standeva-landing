@@ -39,9 +39,9 @@ const Header: React.FC = () => {
 	useEffect(() => {
 		const handleScroll = () => {
 			const currentScrollY = window.scrollY;
-			
+
 			setIsScrolled(currentScrollY > 20);
-			
+
 			// Show/hide header based on scroll direction
 			if (currentScrollY > lastScrollY.current && currentScrollY > 100) {
 				// Scrolling down
@@ -50,7 +50,7 @@ const Header: React.FC = () => {
 				// Scrolling up
 				setIsVisible(true);
 			}
-			
+
 			lastScrollY.current = currentScrollY;
 		};
 
@@ -93,7 +93,6 @@ const Header: React.FC = () => {
 			transition: { duration: 0.3, ease: "easeIn" },
 		},
 	};
-
 
 	const ChevronDown = () => (
 		<svg fill="currentColor" viewBox="0 0 20 20">
@@ -153,7 +152,7 @@ const Header: React.FC = () => {
 				</Logo>
 
 				<NavMenu>
-					{navItems.map((item, i) => (
+					{navItems.map((item) => (
 						<NavItem
 							key={item.name}
 							onMouseEnter={() =>
