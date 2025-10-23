@@ -67,6 +67,42 @@ const hexagonPositions = [
 	{ x: 150, y: 440, delay: 2.1 },
 ];
 
+const codeSnippets = [
+	{
+		title: "API Call",
+		code: `fetch('/api/ai/generate', {
+  method: 'POST',
+  body: JSON.stringify({
+    prompt: 'Generate content',
+    model: 'gpt-4'
+  })
+})`,
+	},
+	{
+		title: "Response",
+		code: `{
+  "status": "success",
+  "data": {
+    "content": "Generated text...",
+    "tokens": 150,
+    "latency": "450ms"
+  }
+}`,
+	},
+	{
+		title: "Integration",
+		code: `import { StandevaAI } from '@standeva/sdk'
+
+const ai = new StandevaAI({
+  apiKey: process.env.API_KEY
+})
+
+const result = await ai.generate({
+  prompt: "Your prompt here"
+})`,
+	},
+];
+
 const platformVariants = ["SaaS", "Automation", "Internal Tools"];
 
 const Hero: React.FC = () => {
@@ -74,6 +110,9 @@ const Hero: React.FC = () => {
 		Array<{ id: number; x: number; y: number; delay: number }>
 	>([]);
 	const platformTextRef = useRef<HTMLSpanElement>(null);
+	const codeTextRef = useRef<HTMLSpanElement>(null);
+	const codeTitleRef = useRef<HTMLDivElement>(null);
+	const codeCursorRef = useRef<HTMLSpanElement>(null);
 
 	useEffect(() => {
 		const newParticles = Array.from({ length: 20 }, (_, i) => ({
@@ -133,6 +172,99 @@ const Hero: React.FC = () => {
 
 		return () => {
 			typewriterTimeouts.forEach(clearTimeout);
+		};
+	}, []);
+
+	useEffect(() => {
+		if (
+			!codeTextRef.current ||
+			!codeTitleRef.current ||
+			!codeCursorRef.current
+		)
+			return;
+
+		let currentSnippetIndex = 0;
+		let isCodeTyping = true;
+		let currentCodeText = "";
+		const codeTimeouts: NodeJS.Timeout[] = [];
+
+		const highlightSyntax = (code: string) => {
+			return code
+				.replace(
+					/('.*?'|".*?")/g,
+					'<span style="color: #22c55e">$1</span>'
+				)
+				.replace(
+					/\b(fetch|method|import|const|await|from|new)\b/g,
+					'<span style="color: #3b82f6">$1</span>'
+				)
+				.replace(
+					/(\{|\}|\[|\])/g,
+					'<span style="color: #eab308">$1</span>'
+				)
+				.replace(/\b(\d+)\b/g, '<span style="color: #f97316">$1</span>')
+				.replace(
+					/(\/\/.*$)/gm,
+					'<span style="color: #6b7280">$1</span>'
+				);
+		};
+
+		const typeCodeCharacter = () => {
+			const currentSnippet = codeSnippets[currentSnippetIndex];
+			const targetCode = currentSnippet.code;
+
+			if (isCodeTyping) {
+				if (currentCodeText.length < targetCode.length) {
+					currentCodeText += targetCode[currentCodeText.length];
+					if (codeTextRef.current) {
+						codeTextRef.current.innerHTML =
+							highlightSyntax(currentCodeText);
+					}
+					if (codeTitleRef.current) {
+						codeTitleRef.current.textContent = currentSnippet.title;
+					}
+					codeTimeouts.push(setTimeout(typeCodeCharacter, 50));
+				} else {
+					// Finished typing, wait then start deleting
+					codeTimeouts.push(
+						setTimeout(() => {
+							isCodeTyping = false;
+							typeCodeCharacter();
+						}, 3000)
+					);
+				}
+			} else {
+				if (currentCodeText.length > 0) {
+					currentCodeText = currentCodeText.slice(0, -1);
+					if (codeTextRef.current) {
+						codeTextRef.current.innerHTML =
+							highlightSyntax(currentCodeText);
+					}
+					codeTimeouts.push(setTimeout(typeCodeCharacter, 25));
+				} else {
+					// Finished deleting, move to next snippet
+					currentSnippetIndex =
+						(currentSnippetIndex + 1) % codeSnippets.length;
+					isCodeTyping = true;
+					codeTimeouts.push(setTimeout(typeCodeCharacter, 500));
+				}
+			}
+		};
+
+		// Start code animation after a delay
+		codeTimeouts.push(setTimeout(typeCodeCharacter, 2000));
+
+		// Cursor blinking
+		const cursorInterval = setInterval(() => {
+			if (codeCursorRef.current) {
+				codeCursorRef.current.style.opacity =
+					codeCursorRef.current.style.opacity === "0" ? "1" : "0";
+			}
+		}, 500);
+
+		return () => {
+			codeTimeouts.forEach(clearTimeout);
+			clearInterval(cursorInterval);
 		};
 	}, []);
 
@@ -271,6 +403,48 @@ const Hero: React.FC = () => {
 			</HexagonContainer>
 		);
 	});
+
+	const CodeBlock: React.FC = () => (
+		<div
+			style={{
+				position: "absolute",
+				background: "rgba(15, 23, 42, 0.95)",
+				border: "1px solid rgba(59, 130, 246, 0.4)",
+				borderRadius: "12px",
+				padding: "1.5rem",
+				fontFamily: "monospace",
+				fontSize: "0.85rem",
+				color: "#e2e8f0",
+				width: "380px",
+				backdropFilter: "blur(15px)",
+				boxShadow: "0 8px 32px rgba(0, 0, 0, 0.4)",
+				top: "68%",
+				right: "11%",
+				zIndex: 15,
+			}}>
+			<div
+				ref={codeTitleRef}
+				style={{
+					color: "#3b82f6",
+					fontWeight: "bold",
+					marginBottom: "0.75rem",
+					fontSize: "0.9rem",
+				}}>
+				API Call
+			</div>
+			<pre
+				style={{
+					margin: 0,
+					whiteSpace: "pre-wrap",
+					lineHeight: "1.4",
+				}}>
+				<span ref={codeTextRef}></span>
+				<span ref={codeCursorRef} style={{ color: "#3b82f6" }}>
+					|
+				</span>
+			</pre>
+		</div>
+	);
 
 	return (
 		<HeroSection>
@@ -459,11 +633,13 @@ const Hero: React.FC = () => {
 						/>
 					))}
 
+					<CodeBlock />
+
 					{/* Floating Elements */}
 					<FloatingElement
 						style={{
-							top: "20%",
-							right: "10%",
+							top: "0%",
+							right: "50%",
 							width: "120px",
 							height: "60px",
 						}}
@@ -476,7 +652,7 @@ const Hero: React.FC = () => {
 					<FloatingElement
 						style={{
 							bottom: "20%",
-							left: "10%",
+							left: "04%",
 							width: "140px",
 							height: "60px",
 						}}
@@ -489,8 +665,8 @@ const Hero: React.FC = () => {
 
 					<FloatingElement
 						style={{
-							top: "60%",
-							right: "20%",
+							top: "50%",
+							right: "30%",
 							width: "100px",
 							height: "60px",
 						}}
