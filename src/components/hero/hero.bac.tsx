@@ -1,7 +1,7 @@
 'use client'
 
-import React, { useEffect, useState } from 'react'
-import { motion, Variants } from 'framer-motion'
+import React, { useEffect, useRef, useState } from "react";
+import { motion, Variants } from "framer-motion";
 import {
 	Database,
 	Cloud,
@@ -67,136 +67,159 @@ const hexagonPositions = [
 	{ x: 150, y: 440, delay: 2.1 },
 ];
 
-const platformVariants = ["SaaS", "Automations", "Internal Tools"];
+const platformVariants = ["SaaS", "Automation", "Internal Tools"];
 
 const Hero: React.FC = () => {
-  const [particles, setParticles] = useState<Array<{id: number, x: number, y: number, delay: number}>>([])
-  // const [currentPlatformIndex, setCurrentPlatformIndex] = useState(0);
-  // const [displayedText, setDisplayedText] = useState("");
-  // const [isTyping, setIsTyping] = useState(true);
+	const [particles, setParticles] = useState<
+		Array<{ id: number; x: number; y: number; delay: number }>
+	>([]);
+	const platformTextRef = useRef<HTMLSpanElement>(null);
 
-  useEffect(() => {
-    const newParticles = Array.from({ length: 20 }, (_, i) => ({
-      id: i,
-      x: Math.random() * 100,
-      y: Math.random() * 100,
-      delay: Math.random() * 2
-    }))
-    setParticles(newParticles)
-  }, [])
+	useEffect(() => {
+		const newParticles = Array.from({ length: 20 }, (_, i) => ({
+			id: i,
+			x: Math.random() * 100,
+			y: Math.random() * 100,
+			delay: Math.random() * 2,
+		}));
+		setParticles(newParticles);
+	}, []);
 
-  // const typewriterCallback = React.useCallback(() => {
-  //   const currentWord = platformVariants[currentPlatformIndex];
-  //   const timeouts: NodeJS.Timeout[] = [];
+	useEffect(() => {
+		if (!platformTextRef.current) return;
 
-  //   if (isTyping) {
-  //     currentWord.split("").forEach((char, index) => {
-  //       const timeout = setTimeout(() => {
-  //         setDisplayedText((prev) => prev + char);
-  //         if (index === currentWord.length - 1) {
-  //           const deleteTimeout = setTimeout(() => {
-  //             setIsTyping(false);
-  //           }, 2000);
-  //           timeouts.push(deleteTimeout);
-  //         }
-  //       }, index * 100);
-  //       timeouts.push(timeout);
-  //     });
-  //   } else {
-  //     for (let i = currentWord.length; i >= 0; i--) {
-  //       const timeout = setTimeout(() => {
-  //         setDisplayedText(currentWord.slice(0, i));
-  //         if (i === 0) {
-  //           setTimeout(() => {
-  //             setCurrentPlatformIndex(
-  //               (prev) => (prev + 1) % platformVariants.length
-  //             );
-  //             setIsTyping(true);
-  //           }, 300);
-  //         }
-  //       }, (currentWord.length - i) * 50);
-  //       timeouts.push(timeout);
-  //     }
-  //   }
+		let currentIndex = 0;
+		let isTyping = true;
+		let currentText = "";
+		const typewriterTimeouts: NodeJS.Timeout[] = [];
 
-  //   return () => {
-  //     timeouts.forEach(clearTimeout);
-  //   };
-  // }, [currentPlatformIndex, isTyping]);
+		const typeNextCharacter = () => {
+			const currentWord = platformVariants[currentIndex];
 
-  // useEffect(() => {
-  //   const cleanup = typewriterCallback();
-  //   return cleanup;
-  // }, [typewriterCallback]);
+			if (isTyping) {
+				if (currentText.length < currentWord.length) {
+					currentText += currentWord[currentText.length];
+					if (platformTextRef.current) {
+						platformTextRef.current.textContent = currentText + "|";
+					}
+					typewriterTimeouts.push(setTimeout(typeNextCharacter, 100));
+				} else {
+					// Finished typing, wait then start deleting
+					typewriterTimeouts.push(
+						setTimeout(() => {
+							isTyping = false;
+							typeNextCharacter();
+						}, 2000)
+					);
+				}
+			} else {
+				if (currentText.length > 0) {
+					currentText = currentText.slice(0, -1);
+					if (platformTextRef.current) {
+						platformTextRef.current.textContent = currentText + "|";
+					}
+					typewriterTimeouts.push(setTimeout(typeNextCharacter, 50));
+				} else {
+					// Finished deleting, move to next word
+					currentIndex = (currentIndex + 1) % platformVariants.length;
+					isTyping = true;
+					typewriterTimeouts.push(setTimeout(typeNextCharacter, 300));
+				}
+			}
+		};
 
-  const titleVariants: Variants = React.useMemo(() => ({
-    hidden: { opacity: 0, y: 30 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: {
-        duration: 0.8,
-        ease: "easeOut"
-      }
-    }
-  }), []);
+		// Start the animation
+		typeNextCharacter();
 
-  const subtitleVariants: Variants = React.useMemo(() => ({
-    hidden: { opacity: 0, y: 20 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: {
-        duration: 0.8,
-        delay: 0.3,
-        ease: "easeOut"
-      }
-    }
-  }), []);
+		return () => {
+			typewriterTimeouts.forEach(clearTimeout);
+		};
+	}, []);
 
-  const ctaVariants: Variants = React.useMemo(() => ({
-    hidden: { opacity: 0, y: 20 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: {
-        duration: 0.8,
-        delay: 0.6,
-        ease: "easeOut"
-      }
-    }
-  }), []);
+	const titleVariants: Variants = React.useMemo(
+		() => ({
+			hidden: { opacity: 0, y: 30 },
+			visible: {
+				opacity: 1,
+				y: 0,
+				transition: {
+					duration: 0.8,
+					ease: "easeOut",
+				},
+			},
+		}),
+		[]
+	);
 
-  const hexagonVariants: Variants = React.useMemo(() => ({
-    hidden: { scale: 0, rotate: -180, opacity: 0 },
-    visible: (delay: number) => ({
-      scale: 1,
-      rotate: 0,
-      opacity: 1,
-      transition: {
-        duration: 0.8,
-        delay: delay,
-        ease: "easeOut"
-      }
-    })
-  }), []);
+	const subtitleVariants: Variants = React.useMemo(
+		() => ({
+			hidden: { opacity: 0, y: 20 },
+			visible: {
+				opacity: 1,
+				y: 0,
+				transition: {
+					duration: 0.8,
+					delay: 0.3,
+					ease: "easeOut",
+				},
+			},
+		}),
+		[]
+	);
 
-  const floatingVariants: Variants = React.useMemo(() => ({
-    animate: {
-      y: [-10, 10, -10],
-      rotate: [0, 5, -5, 0],
-      transition: {
-        duration: 6,
-        repeat: Infinity,
-        ease: "easeInOut"
-      }
-    }
-  }), []);
+	const ctaVariants: Variants = React.useMemo(
+		() => ({
+			hidden: { opacity: 0, y: 20 },
+			visible: {
+				opacity: 1,
+				y: 0,
+				transition: {
+					duration: 0.8,
+					delay: 0.6,
+					ease: "easeOut",
+				},
+			},
+		}),
+		[]
+	);
 
-  const Hexagon: React.FC<{
+	const hexagonVariants: Variants = React.useMemo(
+		() => ({
+			hidden: { scale: 0, rotate: -180, opacity: 0 },
+			visible: (delay: number) => ({
+				scale: 1,
+				rotate: 0,
+				opacity: 1,
+				transition: {
+					duration: 0.8,
+					delay: delay,
+					ease: "easeOut",
+				},
+			}),
+		}),
+		[]
+	);
+
+	const floatingVariants: Variants = React.useMemo(
+		() => ({
+			animate: {
+				y: [-10, 10, -10],
+				rotate: [0, 5, -5, 0],
+				transition: {
+					duration: 6,
+					repeat: Infinity,
+					ease: "easeInOut",
+				},
+			},
+		}),
+		[]
+	);
+
+	const Hexagon: React.FC<{
 		tech: (typeof techIcons)[0];
 		position: (typeof hexagonPositions)[0];
-  }> = React.memo(({ tech, position }) => {
+	}> = React.memo(({ tech, position }) => {
+		Hexagon.displayName = "Hexagon";
 		const IconComponent = tech.icon;
 
 		return (
@@ -247,9 +270,9 @@ const Hero: React.FC = () => {
 				</div>
 			</HexagonContainer>
 		);
-  });
+	});
 
-  return (
+	return (
 		<HeroSection>
 			{/* Background Curves */}
 			<BackgroundCurves viewBox="0 0 1200 800">
@@ -327,6 +350,7 @@ const Hero: React.FC = () => {
 						AI in your
 						<br />
 						<span
+							ref={platformTextRef}
 							style={{
 								background:
 									"linear-gradient(135deg, #3b82f6, #8b5cf6)",
@@ -335,23 +359,6 @@ const Hero: React.FC = () => {
 								WebkitTextFillColor: "transparent",
 							}}>
 							Platform
-							{/* {displayedText}
-							<motion.span
-								animate={{ opacity: [1, 0, 1] }}
-								transition={{
-									duration: 1,
-									repeat: Infinity,
-									ease: "easeInOut",
-								}}
-								style={{
-									background:
-										"linear-gradient(135deg, #3b82f6, #8b5cf6)",
-									backgroundClip: "text",
-									WebkitBackgroundClip: "text",
-									WebkitTextFillColor: "transparent",
-								}}>
-								|
-							</motion.span> */}
 						</span>
 					</HeroTitle>
 
@@ -496,7 +503,7 @@ const Hero: React.FC = () => {
 				</HeroVisual>
 			</HeroContainer>
 		</HeroSection>
-  );
-}
+	);
+};
 
 export default Hero
