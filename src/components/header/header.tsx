@@ -83,6 +83,12 @@ const Header: React.FC = () => {
 		setActiveDropdown(null);
 	};
 
+	const handleClearTimeout = () => {
+		if (timeoutRef.current) {
+			clearTimeout(timeoutRef.current);
+		}
+	};
+
 	const headerVariants: Variants = {
 		visible: {
 			y: 0,
@@ -204,6 +210,8 @@ const Header: React.FC = () => {
 				isOpen={!!activeDropdown}
 				activeItem={activeDropdown}
 				onClose={handleCloseDropdown}
+				onMouseEnter={handleClearTimeout}
+				onMouseLeave={handleMouseLeave}
 			/>
 
 			<AnimatePresence>

@@ -33,6 +33,8 @@ interface DropdownProps {
   isOpen: boolean
   activeItem: string | null
   onClose: () => void
+  onMouseEnter?: () => void
+  onMouseLeave?: () => void
 }
 
 const overlayVariants: Variants = {
@@ -180,7 +182,7 @@ const dropdownContent: Record<string, {
   }
 }
 
-export const Dropdown: React.FC<DropdownProps> = ({ isOpen, activeItem, onClose }) => {
+export const Dropdown: React.FC<DropdownProps> = ({ isOpen, activeItem, onClose, onMouseEnter, onMouseLeave }) => {
   const currentContent = activeItem ? dropdownContent[activeItem] : null
 
   if (!currentContent) return null
@@ -201,6 +203,8 @@ export const Dropdown: React.FC<DropdownProps> = ({ isOpen, activeItem, onClose 
             initial="hidden"
             animate="visible"
             exit="exit"
+            onMouseEnter={onMouseEnter}
+            onMouseLeave={onMouseLeave}
           >
             <DropdownContent>
               <DropdownLinksArea>
