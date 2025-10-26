@@ -113,6 +113,8 @@ const Hero: React.FC = () => {
 	const codeTextRef = useRef<HTMLSpanElement>(null);
 	const codeTitleRef = useRef<HTMLDivElement>(null);
 	const codeCursorRef = useRef<HTMLSpanElement>(null);
+	const heroSectionRef = useRef<HTMLElement>(null);
+	const hexagonContainerRef = useRef<HTMLDivElement>(null);
 
 	useEffect(() => {
 		const newParticles = Array.from({ length: 20 }, (_, i) => ({
@@ -122,6 +124,39 @@ const Hero: React.FC = () => {
 			delay: Math.random() * 2,
 		}));
 		setParticles(newParticles);
+	}, []);
+
+	useEffect(() => {
+		// Hero parallax scroll effect
+		const handleHeroScroll = () => {
+			if (!heroSectionRef.current || !hexagonContainerRef.current) return;
+
+			const scrollY = window.scrollY;
+			const heroHeight = heroSectionRef.current.offsetHeight;
+			
+			// Only apply parallax when hero is visible
+			if (scrollY < heroHeight) {
+				const parallaxSpeed = scrollY * 0.5;
+				
+				// Hexagon container subtle parallax
+				hexagonContainerRef.current.style.transform = `translateY(${parallaxSpeed * 0.3}px)`;
+				
+				// Background curves parallax
+				const curves = heroSectionRef.current.querySelector('svg');
+				if (curves) {
+					curves.style.transform = `translateY(${parallaxSpeed * 0.2}px)`;
+				}
+				
+				// Floating particles parallax
+				const particleContainer = heroSectionRef.current.querySelector('[style*="pointer-events: none"]');
+				if (particleContainer) {
+					(particleContainer as HTMLElement).style.transform = `translateY(${parallaxSpeed * 0.1}px)`;
+				}
+			}
+		};
+
+		window.addEventListener('scroll', handleHeroScroll, { passive: true });
+		return () => window.removeEventListener('scroll', handleHeroScroll);
 	}, []);
 
 	useEffect(() => {
@@ -447,7 +482,7 @@ const Hero: React.FC = () => {
 	);
 
 	return (
-		<HeroSection>
+		<HeroSection ref={heroSectionRef}>
 			{/* Background Curves */}
 			<BackgroundCurves viewBox="0 0 1200 800">
 				<defs>
@@ -561,7 +596,7 @@ const Hero: React.FC = () => {
 					</HeroCTAGroup>
 				</HeroContent>
 
-				<HeroVisual>
+				<HeroVisual ref={hexagonContainerRef}>
 					{/* Connection Lines */}
 					<ConnectionLine viewBox="0 0 600 500">
 						<defs>
