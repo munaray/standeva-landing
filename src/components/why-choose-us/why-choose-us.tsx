@@ -67,7 +67,7 @@ const useCases = [
 
 const WhyChooseUs: React.FC = () => {
 	return (
-		<section className="py-20 bg-linear-to-br from-slate-50 to-blue-50">
+		<section className="why-choose-us-section py-20 bg-gradient-to-br from-slate-50 to-blue-50">
 			<div className="container mx-auto px-6">
 				{/* Header */}
 				<div className="text-center mb-16">

@@ -70,7 +70,7 @@ const servicesData = [
 
 const Services: React.FC = () => {
 	return (
-		<section className="relative py-20 bg-linear-to-br from-slate-50 to-blue-50 overflow-hidden">
+		<section className="services-section relative py-20 bg-gradient-to-br from-slate-50 to-blue-50 overflow-hidden">
 			{/* Background Elements */}
 			<div className="absolute top-10 left-5 w-48 h-48 bg-gradient-radial from-blue-100/30 to-transparent rounded-full pointer-events-none" />
 			<div className="absolute top-20 right-10 w-36 h-36 bg-gradient-radial from-purple-100/20 to-transparent rounded-full pointer-events-none" />

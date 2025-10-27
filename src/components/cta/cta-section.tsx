@@ -5,7 +5,7 @@ import { ArrowRight, Code, GraduationCap } from 'lucide-react'
 
 const CTASection: React.FC = () => {
   return (
-    <section className="relative py-20 bg-gradient-to-br from-blue-900 via-slate-900 to-purple-900 text-white overflow-hidden">
+    <section className="cta-section relative py-20 bg-gradient-to-br from-blue-900 via-slate-900 to-purple-900 text-white overflow-hidden">
       {/* Flowing Path SVG */}
       <svg
         className="absolute top-0 left-0 w-full h-full pointer-events-none opacity-30"

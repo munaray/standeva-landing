@@ -48,7 +48,7 @@ const stats = [
 
 const SuccessStories: React.FC = () => {
   return (
-    <section className="py-20 bg-slate-800 text-white">
+    <section className="success-stories-section py-20 bg-slate-800 text-white">
       <div className="container mx-auto px-6">
         {/* Header */}
         <div className="text-center mb-16">

@@ -8,7 +8,7 @@ const processSteps = [
     id: 1,
     title: "Discovery & Requirements",
     description: "We start by understanding your business needs and identify the best technical approach based on your requirements.",
-    details: [
+    features: [
       "Business requirements analysis",
       "Technical feasibility assessment", 
       "Timeline and budget planning",
@@ -21,7 +21,7 @@ const processSteps = [
     id: 2,
     title: "Planning & Architecture",
     description: "Our team creates a detailed project roadmap and designs the technical architecture for your solution.",
-    details: [
+    features: [
       "Project roadmap and milestones",
       "System architecture design",
       "Database schema planning",
@@ -34,7 +34,7 @@ const processSteps = [
     id: 3,
     title: "Development & Implementation", 
     description: "We build your solution using agile methodologies with regular progress updates and client feedback.",
-    details: [
+    features: [
       "Agile development sprints",
       "Regular progress reviews",
       "Client feedback integration",
@@ -47,7 +47,7 @@ const processSteps = [
     id: 4,
     title: "Testing & Quality Assurance",
     description: "Comprehensive testing ensures your solution meets all requirements and performs optimally.",
-    details: [
+    features: [
       "Unit and integration testing",
       "Performance optimization",
       "Security vulnerability checks",
@@ -60,7 +60,7 @@ const processSteps = [
     id: 5,
     title: "Deployment & Support",
     description: "We deploy your solution to production and provide ongoing maintenance and support services.",
-    details: [
+    features: [
       "Production deployment setup",
       "Monitoring and analytics",
       "Documentation and training",
@@ -73,7 +73,7 @@ const processSteps = [
 
 const OurProcess: React.FC = () => {
   return (
-    <section className="py-20 bg-white">
+    <section className="process-section py-20 bg-white">
       <div className="container mx-auto px-6">
         {/* Header */}
         <div className="text-center mb-16">
@@ -89,52 +89,41 @@ const OurProcess: React.FC = () => {
         </div>
 
         {/* Process Steps */}
-        <div className="grid lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8 max-w-7xl mx-auto relative">
           {processSteps.map((step, index) => {
             const IconComponent = step.icon
-            const isCenter = index === 2 // Middle card (index 2) in a 5-item grid
-            
             return (
               <div
                 key={step.id}
-                className={`
-                  relative bg-white rounded-2xl p-8 border border-slate-200 hover:shadow-xl transition-all duration-300
-                  ${isCenter ? 'lg:col-start-2 lg:row-start-2' : ''}
-                  ${index === 0 ? 'lg:col-start-1 lg:row-start-1' : ''}
-                  ${index === 1 ? 'lg:col-start-3 lg:row-start-1' : ''}
-                  ${index === 3 ? 'lg:col-start-1 lg:row-start-3' : ''}
-                  ${index === 4 ? 'lg:col-start-3 lg:row-start-3' : ''}
-                `}
+                className="relative bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 group border border-slate-100 hover:border-slate-200"
               >
-                {/* Step Number & Icon */}
-                <div className="flex items-center gap-4 mb-6">
-                  <div className={`w-16 h-16 rounded-xl bg-gradient-to-br ${step.color} flex items-center justify-center shadow-lg`}>
-                    <IconComponent size={28} className="text-white" />
-                  </div>
-                  <div className="flex items-center justify-center w-10 h-10 bg-slate-100 rounded-full">
-                    <span className="text-slate-700 font-bold text-lg">{step.id}</span>
-                  </div>
+                {/* Step Number */}
+                <div className="absolute -top-4 -left-4 w-10 h-10 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full flex items-center justify-center text-white font-bold text-lg shadow-lg">
+                  {step.id}
+                </div>
+
+                {/* Icon */}
+                <div className={`w-16 h-16 rounded-xl bg-gradient-to-r ${step.color} flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300`}>
+                  <IconComponent className="w-8 h-8 text-white" />
                 </div>
 
                 {/* Content */}
-                <div className="mb-6">
-                  <h3 className="text-xl font-bold text-slate-900 mb-3">
-                    {step.title}
-                  </h3>
-                  <p className="text-slate-600 leading-relaxed mb-4">
-                    {step.description}
-                  </p>
-                </div>
+                <h3 className="text-xl font-bold text-slate-800 mb-4 group-hover:text-blue-600 transition-colors duration-300">
+                  {step.title}
+                </h3>
+                <p className="text-slate-600 leading-relaxed mb-6">
+                  {step.description}
+                </p>
 
-                {/* Details List */}
-                <div className="space-y-2">
-                  {step.details.map((detail, detailIndex) => (
-                    <div key={detailIndex} className="flex items-start gap-2">
-                      <div className="w-1.5 h-1.5 bg-slate-400 rounded-full mt-2 flex-shrink-0" />
-                      <p className="text-sm text-slate-600">{detail}</p>
-                    </div>
+                {/* Features List */}
+                <ul className="space-y-2">
+                  {step.features.map((feature, featureIndex) => (
+                    <li key={featureIndex} className="flex items-start text-sm text-slate-600">
+                      <span className="w-2 h-2 bg-blue-500 rounded-full mt-2 mr-3 flex-shrink-0"></span>
+                      {feature}
+                    </li>
                   ))}
-                </div>
+                </ul>
 
                 {/* Connection Lines for larger screens */}
                 {index < processSteps.length - 1 && (

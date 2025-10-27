@@ -2,6 +2,11 @@
 
 import React, { useEffect, useRef, useState } from "react";
 import { motion, Variants } from "framer-motion";
+import gsap from "gsap";
+import { useGSAP } from "@gsap/react";
+import { ScrollTrigger } from "gsap/all";
+
+gsap.registerPlugin(ScrollTrigger);
 import {
 	Database,
 	Cloud,
@@ -105,6 +110,10 @@ const result = await ai.generate({
 
 const platformVariants = ["SaaS", "Automation", "Internal Tools"];
 
+const ColorTransitionBox: React.FC = () => {
+	return null;
+};
+
 const Hero: React.FC = () => {
 	const [particles, setParticles] = useState<
 		Array<{ id: number; x: number; y: number; delay: number }>
@@ -115,6 +124,10 @@ const Hero: React.FC = () => {
 	const codeCursorRef = useRef<HTMLSpanElement>(null);
 	const heroSectionRef = useRef<HTMLElement>(null);
 	const hexagonContainerRef = useRef<HTMLDivElement>(null);
+
+	useGSAP(() => {
+		gsap.set("body", { backgroundColor: "#0f172a" });
+	});
 
 	useEffect(() => {
 		const newParticles = Array.from({ length: 20 }, (_, i) => ({
@@ -127,36 +140,39 @@ const Hero: React.FC = () => {
 	}, []);
 
 	useEffect(() => {
-		// Hero parallax scroll effect
 		const handleHeroScroll = () => {
 			if (!heroSectionRef.current || !hexagonContainerRef.current) return;
 
 			const scrollY = window.scrollY;
 			const heroHeight = heroSectionRef.current.offsetHeight;
-			
-			// Only apply parallax when hero is visible
+
 			if (scrollY < heroHeight) {
 				const parallaxSpeed = scrollY * 0.5;
-				
-				// Hexagon container subtle parallax
-				hexagonContainerRef.current.style.transform = `translateY(${parallaxSpeed * 0.3}px)`;
-				
-				// Background curves parallax
-				const curves = heroSectionRef.current.querySelector('svg');
+
+				hexagonContainerRef.current.style.transform = `translateY(${
+					parallaxSpeed * 0.3
+				}px)`;
+
+				const curves = heroSectionRef.current.querySelector("svg");
 				if (curves) {
-					curves.style.transform = `translateY(${parallaxSpeed * 0.2}px)`;
+					curves.style.transform = `translateY(${
+						parallaxSpeed * 0.2
+					}px)`;
 				}
-				
-				// Floating particles parallax
-				const particleContainer = heroSectionRef.current.querySelector('[style*="pointer-events: none"]');
+
+				const particleContainer = heroSectionRef.current.querySelector(
+					'[style*="pointer-events: none"]'
+				);
 				if (particleContainer) {
-					(particleContainer as HTMLElement).style.transform = `translateY(${parallaxSpeed * 0.1}px)`;
+					(
+						particleContainer as HTMLElement
+					).style.transform = `translateY(${parallaxSpeed * 0.1}px)`;
 				}
 			}
 		};
 
-		window.addEventListener('scroll', handleHeroScroll, { passive: true });
-		return () => window.removeEventListener('scroll', handleHeroScroll);
+		window.addEventListener("scroll", handleHeroScroll, { passive: true });
+		return () => window.removeEventListener("scroll", handleHeroScroll);
 	}, []);
 
 	useEffect(() => {
@@ -178,7 +194,6 @@ const Hero: React.FC = () => {
 					}
 					typewriterTimeouts.push(setTimeout(typeNextCharacter, 100));
 				} else {
-					// Finished typing, wait then start deleting
 					typewriterTimeouts.push(
 						setTimeout(() => {
 							isTyping = false;
@@ -194,7 +209,6 @@ const Hero: React.FC = () => {
 					}
 					typewriterTimeouts.push(setTimeout(typeNextCharacter, 50));
 				} else {
-					// Finished deleting, move to next word
 					currentIndex = (currentIndex + 1) % platformVariants.length;
 					isTyping = true;
 					typewriterTimeouts.push(setTimeout(typeNextCharacter, 300));
@@ -202,7 +216,6 @@ const Hero: React.FC = () => {
 			}
 		};
 
-		// Start the animation
 		typeNextCharacter();
 
 		return () => {
@@ -260,7 +273,6 @@ const Hero: React.FC = () => {
 					}
 					codeTimeouts.push(setTimeout(typeCodeCharacter, 50));
 				} else {
-					// Finished typing, wait then start deleting
 					codeTimeouts.push(
 						setTimeout(() => {
 							isCodeTyping = false;
@@ -277,7 +289,6 @@ const Hero: React.FC = () => {
 					}
 					codeTimeouts.push(setTimeout(typeCodeCharacter, 25));
 				} else {
-					// Finished deleting, move to next snippet
 					currentSnippetIndex =
 						(currentSnippetIndex + 1) % codeSnippets.length;
 					isCodeTyping = true;
@@ -286,10 +297,7 @@ const Hero: React.FC = () => {
 			}
 		};
 
-		// Start code animation after a delay
 		codeTimeouts.push(setTimeout(typeCodeCharacter, 2000));
-
-		// Cursor blinking
 		const cursorInterval = setInterval(() => {
 			if (codeCursorRef.current) {
 				codeCursorRef.current.style.opacity =
@@ -483,7 +491,8 @@ const Hero: React.FC = () => {
 
 	return (
 		<HeroSection ref={heroSectionRef}>
-			{/* Background Curves */}
+			<ColorTransitionBox />
+
 			<BackgroundCurves viewBox="0 0 1200 800">
 				<defs>
 					<linearGradient
@@ -524,7 +533,6 @@ const Hero: React.FC = () => {
 				/>
 			</BackgroundCurves>
 
-			{/* Floating Particles */}
 			<ParticleContainer>
 				{particles.map((particle) => (
 					<Particle
@@ -597,7 +605,6 @@ const Hero: React.FC = () => {
 				</HeroContent>
 
 				<HeroVisual ref={hexagonContainerRef}>
-					{/* Connection Lines */}
 					<ConnectionLine viewBox="0 0 600 500">
 						<defs>
 							<linearGradient
@@ -623,7 +630,6 @@ const Hero: React.FC = () => {
 								/>
 							</linearGradient>
 						</defs>
-						{/* Animated connecting lines between hexagons */}
 						<motion.line
 							x1="280"
 							y1="150"
@@ -659,7 +665,6 @@ const Hero: React.FC = () => {
 						/>
 					</ConnectionLine>
 
-					{/* Hexagon Network */}
 					{techIcons.slice(0, 12).map((tech, index) => (
 						<Hexagon
 							key={tech.name}
@@ -670,7 +675,6 @@ const Hero: React.FC = () => {
 
 					<CodeBlock />
 
-					{/* Floating Elements */}
 					<FloatingElement
 						style={{
 							top: "0%",
