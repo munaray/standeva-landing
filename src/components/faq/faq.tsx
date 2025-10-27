@@ -119,7 +119,7 @@ const FAQ: React.FC = () => {
         {/* FAQ Items */}
         <motion.div 
           ref={faqRef}
-          className="max-w-4xl mx-auto space-y-4"
+          className="max-w-4xl mx-auto space-y-3 sm:space-y-4 px-4 sm:px-0"
           variants={containerVariants}
           initial="hidden"
           animate={faqInView ? "visible" : "hidden"}>
@@ -129,23 +129,23 @@ const FAQ: React.FC = () => {
             return (
               <motion.div
                 key={item.id}
-                className="bg-gray-800 rounded-2xl border border-gray-700 overflow-hidden transition-all duration-300 hover:border-blue-500"
+                className="bg-gray-800 rounded-xl sm:rounded-2xl border border-gray-700 overflow-hidden transition-all duration-300 hover:border-blue-500 touch-manipulation"
                 variants={itemVariants}
                 whileHover={{ scale: 1.01 }}>
                 {/* Question */}
                 <button
                   onClick={() => toggleItem(item.id)}
-                  className="w-full p-8 text-left flex items-center justify-between gap-4 hover:bg-gray-700/50 transition-colors duration-300"
+                  className="w-full p-4 sm:p-6 md:p-8 text-left flex items-center justify-between gap-3 sm:gap-4 hover:bg-gray-700/50 active:bg-gray-700/70 transition-colors duration-300 touch-manipulation"
                 >
-                  <h3 className="text-lg md:text-xl font-semibold text-white pr-4">
+                  <h3 className="text-base sm:text-lg md:text-xl font-semibold text-white pr-2 sm:pr-4 leading-tight">
                     {item.question}
                   </h3>
                   <motion.div
                     animate={{ rotate: isOpen ? 180 : 0 }}
                     transition={{ duration: 0.3 }}>
                     <ChevronDown 
-                      size={24} 
-                      className="text-blue-400 flex-shrink-0"
+                      size={20} 
+                      className="text-blue-400 flex-shrink-0 sm:w-6 sm:h-6"
                     />
                   </motion.div>
                 </button>
@@ -159,10 +159,10 @@ const FAQ: React.FC = () => {
                       animate={{ height: "auto", opacity: 1 }}
                       exit={{ height: 0, opacity: 0 }}
                       transition={{ duration: 0.3, ease: "easeInOut" }}>
-                      <div className="px-8 pb-8">
-                        <div className="w-full h-px bg-gray-700 mb-6" />
+                      <div className="px-4 pb-4 sm:px-6 sm:pb-6 md:px-8 md:pb-8">
+                        <div className="w-full h-px bg-gray-700 mb-4 sm:mb-6" />
                         <motion.p 
-                          className="text-slate-300 leading-relaxed"
+                          className="text-sm sm:text-base text-slate-300 leading-relaxed"
                           initial={{ y: -10, opacity: 0 }}
                           animate={{ y: 0, opacity: 1 }}
                           transition={{ delay: 0.1 }}>
@@ -178,15 +178,15 @@ const FAQ: React.FC = () => {
         </motion.div>
 
         {/* Bottom CTA */}
-        <div className="text-center mt-16">
-          <div className="p-8 bg-gray-800 rounded-2xl border border-gray-700 max-w-2xl mx-auto">
-            <h3 className="text-2xl font-bold mb-4">
+        <div className="text-center mt-12 sm:mt-16 px-4">
+          <div className="p-6 sm:p-8 bg-gray-800 rounded-xl sm:rounded-2xl border border-gray-700 max-w-2xl mx-auto">
+            <h3 className="text-xl sm:text-2xl font-bold mb-3 sm:mb-4">
               Still have questions?
             </h3>
-            <p className="text-slate-300 mb-6">
+            <p className="text-sm sm:text-base text-slate-300 mb-4 sm:mb-6">
               Our team is here to help. Schedule a free consultation to discuss your specific needs.
             </p>
-            <button className="px-8 py-4 bg-gradient-to-r from-blue-600 to-purple-600 text-white font-semibold rounded-xl hover:scale-105 transition-transform duration-300 shadow-lg">
+            <button className="px-6 py-3 sm:px-8 sm:py-4 bg-gradient-to-r from-blue-600 to-purple-600 text-white font-semibold rounded-xl hover:scale-105 active:scale-95 transition-transform duration-300 shadow-lg text-sm sm:text-base touch-manipulation w-full sm:w-auto">
               Schedule Free Consultation
             </button>
           </div>

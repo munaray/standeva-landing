@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { motion } from "framer-motion";
+import { motion, Variant } from "framer-motion";
 import { useScrollAnimation } from "@/hooks/use-scroll-animation";
 import { Github, Twitter, Linkedin, Mail, MapPin, Phone } from "lucide-react";
 
@@ -51,7 +51,7 @@ const Footer: React.FC = () => {
 		triggerOnce: false
 	});
 
-	const containerVariants = {
+	const containerVariants: { [key: string]: Variant } = {
 		hidden: { opacity: 0 },
 		visible: {
 			opacity: 1,
@@ -62,9 +62,9 @@ const Footer: React.FC = () => {
 		},
 	};
 
-	const itemVariants = {
-		hidden: { 
-			opacity: 0, 
+	const itemVariants: { [key: string]: Variant } = {
+		hidden: {
+			opacity: 0,
 			y: 30,
 		},
 		visible: {
@@ -79,17 +79,19 @@ const Footer: React.FC = () => {
 
 	return (
 		<footer className="bg-slate-900 text-white">
-			<div className="container mx-auto px-6 py-16">
+			<div className="container mx-auto px-4 sm:px-6 py-12 sm:py-16">
 				{/* Main Footer Content */}
-				<motion.div 
+				<motion.div
 					ref={footerRef}
-					className="grid md:grid-cols-2 lg:grid-cols-6 gap-8 mb-12"
+					className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-6 gap-6 sm:gap-8 mb-8 sm:mb-12"
 					variants={containerVariants}
 					initial="hidden"
 					animate={footerInView ? "visible" : "hidden"}>
 					{/* Brand Section */}
-					<motion.div className="lg:col-span-2" variants={itemVariants}>
-						<div className="flex items-center gap-3 mb-6">
+					<motion.div
+						className="sm:col-span-2 lg:col-span-2"
+						variants={itemVariants}>
+						<div className="flex items-center gap-2 sm:gap-3 mb-4 sm:mb-6">
 							<div className="w-10 h-10 bg-linear-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
 								<span className="text-white font-bold text-xl">
 									S
@@ -192,7 +194,7 @@ const Footer: React.FC = () => {
 				{/* Bottom Section */}
 				<div className="border-t border-slate-800 pt-8 flex flex-col md:flex-row justify-between items-center">
 					<p className="text-slate-400 text-sm">
-						© 2024 Standeva. All rights reserved.
+						© 2025 Standeva. All rights reserved.
 					</p>
 
 					{/* Product Hunt Badge Placeholder */}

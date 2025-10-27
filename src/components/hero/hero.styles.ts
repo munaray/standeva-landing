@@ -9,6 +9,18 @@ export const HeroSection = styled.section`
 	display: flex;
 	align-items: center;
 	padding-top: 80px;
+
+	@media (max-width: 768px) {
+		min-height: 120vh;
+		padding-top: 60px;
+		padding-bottom: 40px;
+	}
+
+	@media (max-width: 480px) {
+		min-height: 110vh;
+		padding-top: 40px;
+		padding-bottom: 30px;
+	}
 `;
 
 export const HeroContainer = styled.div`
