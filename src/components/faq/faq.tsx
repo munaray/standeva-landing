@@ -1,6 +1,8 @@
 'use client'
 
 import React, { useState } from 'react'
+import { motion, AnimatePresence } from 'framer-motion'
+import { useScrollAnimation } from '@/hooks/use-scroll-animation'
 import { ChevronDown } from 'lucide-react'
 
 const faqData = [
@@ -38,6 +40,14 @@ const faqData = [
 
 const FAQ: React.FC = () => {
   const [openItems, setOpenItems] = useState<number[]>([])
+  const { ref: headerRef, isInView: headerInView } = useScrollAnimation({
+    threshold: 0.3,
+    triggerOnce: false
+  })
+  const { ref: faqRef, isInView: faqInView } = useScrollAnimation({
+    threshold: 0.2,
+    triggerOnce: false
+  })
 
   const toggleItem = (id: number) => {
     setOpenItems(prev => 
@@ -47,11 +57,54 @@ const FAQ: React.FC = () => {
     )
   }
 
+  const headerVariants = {
+    hidden: { opacity: 0, y: 40 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        duration: 0.8,
+        ease: "easeOut",
+      },
+    },
+  }
+
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1,
+        delayChildren: 0.1,
+      },
+    },
+  }
+
+  const itemVariants = {
+    hidden: { 
+      opacity: 0, 
+      y: 30,
+    },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        duration: 0.5,
+        ease: "easeOut",
+      },
+    },
+  }
+
   return (
     <section className="faq-section py-20 bg-gray-900 text-white">
       <div className="container mx-auto px-6">
         {/* Header */}
-        <div className="text-center mb-16">
+        <motion.div 
+          ref={headerRef}
+          className="text-center mb-16"
+          variants={headerVariants}
+          initial="hidden"
+          animate={headerInView ? "visible" : "hidden"}>
           <p className="text-sm uppercase tracking-wide text-blue-400 font-semibold mb-4">
             FAQ
           </p>
@@ -59,20 +112,26 @@ const FAQ: React.FC = () => {
             Questions we're usually asked
           </h2>
           <p className="text-xl text-slate-300 max-w-3xl mx-auto">
-            Got questions about our development services or training programs? We've compiled answers to the most common inquiries.
+            Got questions about our development services or training programs? We&apos;ve compiled answers to the most common inquiries.
           </p>
-        </div>
+        </motion.div>
 
         {/* FAQ Items */}
-        <div className="max-w-4xl mx-auto space-y-4">
+        <motion.div 
+          ref={faqRef}
+          className="max-w-4xl mx-auto space-y-4"
+          variants={containerVariants}
+          initial="hidden"
+          animate={faqInView ? "visible" : "hidden"}>
           {faqData.map((item) => {
             const isOpen = openItems.includes(item.id)
             
             return (
-              <div
+              <motion.div
                 key={item.id}
                 className="bg-gray-800 rounded-2xl border border-gray-700 overflow-hidden transition-all duration-300 hover:border-blue-500"
-              >
+                variants={itemVariants}
+                whileHover={{ scale: 1.01 }}>
                 {/* Question */}
                 <button
                   onClick={() => toggleItem(item.id)}
@@ -81,29 +140,42 @@ const FAQ: React.FC = () => {
                   <h3 className="text-lg md:text-xl font-semibold text-white pr-4">
                     {item.question}
                   </h3>
-                  <ChevronDown 
-                    size={24} 
-                    className={`text-blue-400 flex-shrink-0 transition-transform duration-300 ${
-                      isOpen ? 'rotate-180' : ''
-                    }`}
-                  />
+                  <motion.div
+                    animate={{ rotate: isOpen ? 180 : 0 }}
+                    transition={{ duration: 0.3 }}>
+                    <ChevronDown 
+                      size={24} 
+                      className="text-blue-400 flex-shrink-0"
+                    />
+                  </motion.div>
                 </button>
 
                 {/* Answer */}
-                <div className={`overflow-hidden transition-all duration-300 ${
-                  isOpen ? 'max-h-96' : 'max-h-0'
-                }`}>
-                  <div className="px-8 pb-8">
-                    <div className="w-full h-px bg-gray-700 mb-6" />
-                    <p className="text-slate-300 leading-relaxed">
-                      {item.answer}
-                    </p>
-                  </div>
-                </div>
-              </div>
+                <AnimatePresence>
+                  {isOpen && (
+                    <motion.div 
+                      className="overflow-hidden"
+                      initial={{ height: 0, opacity: 0 }}
+                      animate={{ height: "auto", opacity: 1 }}
+                      exit={{ height: 0, opacity: 0 }}
+                      transition={{ duration: 0.3, ease: "easeInOut" }}>
+                      <div className="px-8 pb-8">
+                        <div className="w-full h-px bg-gray-700 mb-6" />
+                        <motion.p 
+                          className="text-slate-300 leading-relaxed"
+                          initial={{ y: -10, opacity: 0 }}
+                          animate={{ y: 0, opacity: 1 }}
+                          transition={{ delay: 0.1 }}>
+                          {item.answer}
+                        </motion.p>
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </motion.div>
             )
           })}
-        </div>
+        </motion.div>
 
         {/* Bottom CTA */}
         <div className="text-center mt-16">

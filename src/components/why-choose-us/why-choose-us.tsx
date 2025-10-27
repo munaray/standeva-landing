@@ -1,6 +1,8 @@
 "use client";
 
 import React from "react";
+import { motion } from "framer-motion";
+import { useScrollAnimation } from "@/hooks/use-scroll-animation";
 import {
 	ArrowRight,
 	Rocket,
@@ -65,12 +67,185 @@ const useCases = [
 	},
 ];
 
+const UseCaseItem: React.FC<{
+	useCase: typeof useCases[0];
+	isReversed: boolean;
+	leftSlideVariants: any;
+	rightSlideVariants: any;
+}> = ({ useCase, isReversed, leftSlideVariants, rightSlideVariants }) => {
+	const { ref: caseRef, isInView: caseInView } = useScrollAnimation({
+		threshold: 0.3,
+		triggerOnce: false
+	});
+	const IconComponent = useCase.icon;
+
+	return (
+		<motion.div
+			ref={caseRef}
+			className={`flex flex-col lg:flex-row items-center gap-12 ${
+				isReversed ? "lg:flex-row-reverse" : ""
+			}`}
+			variants={isReversed ? rightSlideVariants : leftSlideVariants}
+			initial="hidden"
+			animate={caseInView ? "visible" : "hidden"}>
+			{/* Content Side */}
+			<div className="flex-1 space-y-6">
+				<div>
+					<div className="flex items-center gap-4 mb-4">
+						<div
+							className={`w-12 h-12 rounded-xl bg-gradient-to-br ${useCase.gradient} flex items-center justify-center shadow-lg`}>
+							<IconComponent
+								size={24}
+								className="text-white"
+							/>
+						</div>
+						<div>
+							<h3 className="text-2xl font-bold text-slate-900">
+								{useCase.title}
+							</h3>
+							<p className="text-lg text-slate-600">
+								{useCase.subtitle}
+							</p>
+						</div>
+					</div>
+
+					<p className="text-slate-600 leading-relaxed text-lg">
+						{useCase.description}
+					</p>
+				</div>
+
+				{/* Features List */}
+				<div className="space-y-3">
+					{useCase.features.map(
+						(feature, featureIndex) => (
+							<div
+								key={featureIndex}
+								className="flex items-start gap-3">
+								<div className="w-6 h-6 rounded-full bg-green-100 flex items-center justify-center flex-shrink-0 mt-0.5">
+									<div className="w-2 h-2 bg-green-500 rounded-full" />
+								</div>
+								<p className="text-slate-700">
+									{feature}
+								</p>
+							</div>
+						)
+					)}
+				</div>
+
+				{/* Button */}
+				<motion.button
+					className={`inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r ${useCase.gradient} text-white font-semibold rounded-xl hover:scale-105 transition-transform duration-300 shadow-lg`}
+					whileHover={{ scale: 1.05, y: -2 }}
+					whileTap={{ scale: 0.98 }}>
+					{useCase.buttonText}
+					<ArrowRight size={16} />
+				</motion.button>
+			</div>
+
+			{/* Visual Side */}
+			<div className="flex-1 max-w-lg">
+				<div
+					className={`relative p-8 bg-gradient-to-br ${useCase.gradient} rounded-2xl shadow-xl`}>
+					{/* Main Image/Icon */}
+					<div className="text-center mb-6">
+						<div className="text-8xl mb-4">
+							{useCase.image}
+						</div>
+						<div className="w-16 h-16 mx-auto bg-white/20 rounded-xl flex items-center justify-center backdrop-blur-sm">
+							<IconComponent
+								size={32}
+								className="text-white"
+							/>
+						</div>
+					</div>
+
+					{/* Floating Elements */}
+					<div className="absolute top-4 right-4 w-12 h-12 bg-white/10 rounded-lg flex items-center justify-center backdrop-blur-sm">
+						<Code
+							size={20}
+							className="text-white"
+						/>
+					</div>
+
+					<div className="absolute bottom-4 left-4 w-12 h-12 bg-white/10 rounded-lg flex items-center justify-center backdrop-blur-sm">
+						{useCase.id === "individuals" ? (
+							<GraduationCap
+								size={20}
+								className="text-white"
+							/>
+						) : (
+							<Zap
+								size={20}
+								className="text-white"
+							/>
+						)}
+					</div>
+
+					{/* Background Pattern */}
+					<div className="absolute inset-0 opacity-10">
+						<div className="absolute top-8 left-8 w-4 h-4 bg-white rounded-full" />
+						<div className="absolute top-16 right-12 w-2 h-2 bg-white rounded-full" />
+						<div className="absolute bottom-12 left-12 w-3 h-3 bg-white rounded-full" />
+						<div className="absolute bottom-8 right-8 w-4 h-4 bg-white rounded-full" />
+					</div>
+				</div>
+			</div>
+		</motion.div>
+	);
+};
+
 const WhyChooseUs: React.FC = () => {
+	const { ref: headerRef, isInView: headerInView } = useScrollAnimation({
+		threshold: 0.3,
+		triggerOnce: false
+	});
+
+	const headerVariants = {
+		hidden: { opacity: 0, y: 40 },
+		visible: {
+			opacity: 1,
+			y: 0,
+			transition: {
+				duration: 0.8,
+				ease: "easeOut",
+			},
+		},
+	};
+
+	const leftSlideVariants = {
+		hidden: { opacity: 0, x: -80 },
+		visible: {
+			opacity: 1,
+			x: 0,
+			transition: {
+				duration: 0.8,
+				ease: "easeOut",
+			},
+		},
+	};
+
+	const rightSlideVariants = {
+		hidden: { opacity: 0, x: 80 },
+		visible: {
+			opacity: 1,
+			x: 0,
+			transition: {
+				duration: 0.8,
+				ease: "easeOut",
+			},
+		},
+	};
+
 	return (
 		<section className="why-choose-us-section py-20 bg-gradient-to-br from-slate-50 to-blue-50">
 			<div className="container mx-auto px-6">
 				{/* Header */}
-				<div className="text-center mb-16">
+				<motion.div 
+					ref={headerRef}
+					className="text-center mb-16"
+					variants={headerVariants}
+					initial="hidden"
+					animate={headerInView ? "visible" : "hidden"}>
 					<p className="text-sm uppercase tracking-wide text-blue-600 font-semibold mb-4">
 						MULTIPLE USE CASES
 					</p>
@@ -82,7 +257,7 @@ const WhyChooseUs: React.FC = () => {
 						enterprises scaling their teams, we provide tailored
 						solutions for every stage of your journey
 					</p>
-				</div>
+				</motion.div>
 
 				{/* Use Cases */}
 				<div className="space-y-12 max-w-6xl mx-auto">
@@ -91,112 +266,13 @@ const WhyChooseUs: React.FC = () => {
 						const isReversed = index % 2 === 1;
 
 						return (
-							<div
+							<UseCaseItem
 								key={useCase.id}
-								className={`flex flex-col lg:flex-row items-center gap-12 ${
-									isReversed ? "lg:flex-row-reverse" : ""
-								}`}>
-								{/* Content Side */}
-								<div className="flex-1 space-y-6">
-									<div>
-										<div className="flex items-center gap-4 mb-4">
-											<div
-												className={`w-12 h-12 rounded-xl bg-gradient-to-br ${useCase.gradient} flex items-center justify-center shadow-lg`}>
-												<IconComponent
-													size={24}
-													className="text-white"
-												/>
-											</div>
-											<div>
-												<h3 className="text-2xl font-bold text-slate-900">
-													{useCase.title}
-												</h3>
-												<p className="text-lg text-slate-600">
-													{useCase.subtitle}
-												</p>
-											</div>
-										</div>
-
-										<p className="text-slate-600 leading-relaxed text-lg">
-											{useCase.description}
-										</p>
-									</div>
-
-									{/* Features List */}
-									<div className="space-y-3">
-										{useCase.features.map(
-											(feature, featureIndex) => (
-												<div
-													key={featureIndex}
-													className="flex items-start gap-3">
-													<div className="w-6 h-6 rounded-full bg-green-100 flex items-center justify-center flex-shrink-0 mt-0.5">
-														<div className="w-2 h-2 bg-green-500 rounded-full" />
-													</div>
-													<p className="text-slate-700">
-														{feature}
-													</p>
-												</div>
-											)
-										)}
-									</div>
-
-									{/* Button */}
-									<button
-										className={`inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r ${useCase.gradient} text-white font-semibold rounded-xl hover:scale-105 transition-transform duration-300 shadow-lg`}>
-										{useCase.buttonText}
-										<ArrowRight size={16} />
-									</button>
-								</div>
-
-								{/* Visual Side */}
-								<div className="flex-1 max-w-lg">
-									<div
-										className={`relative p-8 bg-gradient-to-br ${useCase.gradient} rounded-2xl shadow-xl`}>
-										{/* Main Image/Icon */}
-										<div className="text-center mb-6">
-											<div className="text-8xl mb-4">
-												{useCase.image}
-											</div>
-											<div className="w-16 h-16 mx-auto bg-white/20 rounded-xl flex items-center justify-center backdrop-blur-sm">
-												<IconComponent
-													size={32}
-													className="text-white"
-												/>
-											</div>
-										</div>
-
-										{/* Floating Elements */}
-										<div className="absolute top-4 right-4 w-12 h-12 bg-white/10 rounded-lg flex items-center justify-center backdrop-blur-sm">
-											<Code
-												size={20}
-												className="text-white"
-											/>
-										</div>
-
-										<div className="absolute bottom-4 left-4 w-12 h-12 bg-white/10 rounded-lg flex items-center justify-center backdrop-blur-sm">
-											{useCase.id === "individuals" ? (
-												<GraduationCap
-													size={20}
-													className="text-white"
-												/>
-											) : (
-												<Zap
-													size={20}
-													className="text-white"
-												/>
-											)}
-										</div>
-
-										{/* Background Pattern */}
-										<div className="absolute inset-0 opacity-10">
-											<div className="absolute top-8 left-8 w-4 h-4 bg-white rounded-full" />
-											<div className="absolute top-16 right-12 w-2 h-2 bg-white rounded-full" />
-											<div className="absolute bottom-12 left-12 w-3 h-3 bg-white rounded-full" />
-											<div className="absolute bottom-8 right-8 w-4 h-4 bg-white rounded-full" />
-										</div>
-									</div>
-								</div>
-							</div>
+								useCase={useCase}
+								isReversed={isReversed}
+								leftSlideVariants={leftSlideVariants}
+								rightSlideVariants={rightSlideVariants}
+							/>
 						);
 					})}
 				</div>

@@ -1,6 +1,8 @@
 'use client'
 
 import React from 'react'
+import { motion } from 'framer-motion'
+import { useScrollAnimation } from '@/hooks/use-scroll-animation'
 import { Search, PlaneTakeoff, Code, TestTube, Rocket } from 'lucide-react'
 
 const processSteps = [
@@ -72,11 +74,90 @@ const processSteps = [
 ]
 
 const OurProcess: React.FC = () => {
+  const { ref: headerRef, isInView: headerInView } = useScrollAnimation({
+    threshold: 0.3,
+    triggerOnce: false
+  })
+  const { ref: stepsRef, isInView: stepsInView } = useScrollAnimation({
+    threshold: 0.2,
+    triggerOnce: false
+  })
+
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.2,
+        delayChildren: 0.1,
+      },
+    },
+  }
+
+  const cardVariants = {
+    hidden: { 
+      opacity: 0, 
+      y: 60,
+      scale: 0.9,
+    },
+    visible: {
+      opacity: 1,
+      y: 0,
+      scale: 1,
+      transition: {
+        duration: 0.7,
+        ease: "easeOut",
+      },
+    },
+  }
+
+  const headerVariants = {
+    hidden: { opacity: 0, y: 40 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        duration: 0.8,
+        ease: "easeOut",
+      },
+    },
+  }
+
+  const numberVariants = {
+    hidden: { scale: 0, rotate: -180 },
+    visible: {
+      scale: 1,
+      rotate: 0,
+      transition: {
+        duration: 0.5,
+        delay: 0.3,
+        ease: "easeOut",
+      },
+    },
+  }
+
+  const iconVariants = {
+    hidden: { scale: 0 },
+    visible: {
+      scale: 1,
+      transition: {
+        duration: 0.4,
+        delay: 0.5,
+        ease: "easeOut",
+      },
+    },
+  }
+
   return (
     <section className="process-section py-20 bg-white">
       <div className="container mx-auto px-6">
         {/* Header */}
-        <div className="text-center mb-16">
+        <motion.div 
+          ref={headerRef}
+          className="text-center mb-16"
+          variants={headerVariants}
+          initial="hidden"
+          animate={headerInView ? "visible" : "hidden"}>
           <p className="text-sm uppercase tracking-wide text-blue-600 font-semibold mb-4">
             TACKLE EASILY COMPLEX AI INTEGRATIONS
           </p>
@@ -86,26 +167,44 @@ const OurProcess: React.FC = () => {
           <p className="text-xl text-slate-600 max-w-3xl mx-auto">
             Our streamlined process ensures your project is delivered on time, within budget, and exceeds expectations
           </p>
-        </div>
+        </motion.div>
 
         {/* Process Steps */}
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8 max-w-7xl mx-auto relative">
+        <motion.div 
+          ref={stepsRef}
+          className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8 max-w-7xl mx-auto relative"
+          variants={containerVariants}
+          initial="hidden"
+          animate={stepsInView ? "visible" : "hidden"}>
           {processSteps.map((step, index) => {
             const IconComponent = step.icon
             return (
-              <div
+              <motion.div
                 key={step.id}
                 className="relative bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 group border border-slate-100 hover:border-slate-200"
-              >
+                variants={cardVariants}
+                whileHover={{ 
+                  y: -8,
+                  scale: 1.02,
+                  transition: { duration: 0.3 }
+                }}>
                 {/* Step Number */}
-                <div className="absolute -top-4 -left-4 w-10 h-10 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full flex items-center justify-center text-white font-bold text-lg shadow-lg">
+                <motion.div 
+                  className="absolute -top-4 -left-4 w-10 h-10 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full flex items-center justify-center text-white font-bold text-lg shadow-lg"
+                  variants={numberVariants}
+                  initial="hidden"
+                  animate={stepsInView ? "visible" : "hidden"}>
                   {step.id}
-                </div>
+                </motion.div>
 
                 {/* Icon */}
-                <div className={`w-16 h-16 rounded-xl bg-gradient-to-r ${step.color} flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300`}>
+                <motion.div 
+                  className={`w-16 h-16 rounded-xl bg-gradient-to-r ${step.color} flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300`}
+                  variants={iconVariants}
+                  initial="hidden"
+                  animate={stepsInView ? "visible" : "hidden"}>
                   <IconComponent className="w-8 h-8 text-white" />
-                </div>
+                </motion.div>
 
                 {/* Content */}
                 <h3 className="text-xl font-bold text-slate-800 mb-4 group-hover:text-blue-600 transition-colors duration-300">
@@ -127,19 +226,36 @@ const OurProcess: React.FC = () => {
 
                 {/* Connection Lines for larger screens */}
                 {index < processSteps.length - 1 && (
-                  <div className="hidden lg:block absolute top-1/2 -right-4 w-8 h-0.5 bg-gradient-to-r from-slate-300 to-transparent transform -translate-y-1/2" />
+                  <motion.div 
+                    className="hidden lg:block absolute top-1/2 -right-4 w-8 h-0.5 bg-gradient-to-r from-slate-300 to-transparent transform -translate-y-1/2"
+                    initial={{ scaleX: 0 }}
+                    animate={stepsInView ? { scaleX: 1 } : { scaleX: 0 }}
+                    transition={{ 
+                      duration: 0.5, 
+                      delay: 0.8 + index * 0.2,
+                      ease: "easeOut"
+                    }}
+                    style={{ transformOrigin: "left" }}
+                  />
                 )}
-              </div>
+              </motion.div>
             )
           })}
-        </div>
+        </motion.div>
 
         {/* Bottom CTA */}
-        <div className="text-center mt-16">
-          <button className="px-8 py-4 bg-gradient-to-r from-blue-600 to-purple-600 text-white font-semibold rounded-xl hover:scale-105 transition-transform duration-300 shadow-lg">
+        <motion.div 
+          className="text-center mt-16"
+          initial={{ opacity: 0, y: 30 }}
+          animate={stepsInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
+          transition={{ duration: 0.6, delay: 1.5 }}>
+          <motion.button 
+            className="px-8 py-4 bg-gradient-to-r from-blue-600 to-purple-600 text-white font-semibold rounded-xl hover:scale-105 transition-transform duration-300 shadow-lg"
+            whileHover={{ scale: 1.05, y: -2 }}
+            whileTap={{ scale: 0.98 }}>
             Start Your Project Today
-          </button>
-        </div>
+          </motion.button>
+        </motion.div>
       </div>
     </section>
   )

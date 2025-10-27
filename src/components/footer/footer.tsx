@@ -1,6 +1,8 @@
 "use client";
 
 import React from "react";
+import { motion } from "framer-motion";
+import { useScrollAnimation } from "@/hooks/use-scroll-animation";
 import { Github, Twitter, Linkedin, Mail, MapPin, Phone } from "lucide-react";
 
 const footerSections = [
@@ -44,13 +46,49 @@ const footerSections = [
 ];
 
 const Footer: React.FC = () => {
+	const { ref: footerRef, isInView: footerInView } = useScrollAnimation({
+		threshold: 0.2,
+		triggerOnce: false
+	});
+
+	const containerVariants = {
+		hidden: { opacity: 0 },
+		visible: {
+			opacity: 1,
+			transition: {
+				staggerChildren: 0.1,
+				delayChildren: 0.1,
+			},
+		},
+	};
+
+	const itemVariants = {
+		hidden: { 
+			opacity: 0, 
+			y: 30,
+		},
+		visible: {
+			opacity: 1,
+			y: 0,
+			transition: {
+				duration: 0.6,
+				ease: "easeOut",
+			},
+		},
+	};
+
 	return (
 		<footer className="bg-slate-900 text-white">
 			<div className="container mx-auto px-6 py-16">
 				{/* Main Footer Content */}
-				<div className="grid md:grid-cols-2 lg:grid-cols-6 gap-8 mb-12">
+				<motion.div 
+					ref={footerRef}
+					className="grid md:grid-cols-2 lg:grid-cols-6 gap-8 mb-12"
+					variants={containerVariants}
+					initial="hidden"
+					animate={footerInView ? "visible" : "hidden"}>
 					{/* Brand Section */}
-					<div className="lg:col-span-2">
+					<motion.div className="lg:col-span-2" variants={itemVariants}>
 						<div className="flex items-center gap-3 mb-6">
 							<div className="w-10 h-10 bg-linear-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
 								<span className="text-white font-bold text-xl">
@@ -74,7 +112,7 @@ const Footer: React.FC = () => {
 							</div>
 							<div className="flex items-center gap-3 text-slate-400">
 								<Phone size={16} />
-								<span>+1 (555) 123-4567</span>
+								<span>+234 (0) 901 234 5678</span>
 							</div>
 							<div className="flex items-center gap-3 text-slate-400">
 								<MapPin size={16} />
@@ -105,11 +143,11 @@ const Footer: React.FC = () => {
 								<Mail size={18} />
 							</a>
 						</div>
-					</div>
+					</motion.div>
 
 					{/* Footer Links */}
 					{footerSections.map((section, index) => (
-						<div key={index}>
+						<motion.div key={index} variants={itemVariants}>
 							<h3 className="font-semibold text-white mb-4">
 								{section.title}
 							</h3>
@@ -124,9 +162,9 @@ const Footer: React.FC = () => {
 									</li>
 								))}
 							</ul>
-						</div>
+						</motion.div>
 					))}
-				</div>
+				</motion.div>
 
 				{/* Newsletter Section */}
 				<div className="border-t border-slate-800 pt-12 mb-8">

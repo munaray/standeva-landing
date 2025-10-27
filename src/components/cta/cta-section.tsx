@@ -1,9 +1,51 @@
 'use client'
 
 import React from 'react'
+import { motion } from 'framer-motion'
+import { useScrollAnimation } from '@/hooks/use-scroll-animation'
 import { ArrowRight, Code, GraduationCap } from 'lucide-react'
 
 const CTASection: React.FC = () => {
+  const { ref: ctaRef, isInView: ctaInView } = useScrollAnimation({
+    threshold: 0.3,
+    triggerOnce: false
+  })
+
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.2,
+        delayChildren: 0.1,
+      },
+    },
+  }
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 40 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        duration: 0.8,
+        ease: "easeOut",
+      },
+    },
+  }
+
+  const buttonVariants = {
+    hidden: { opacity: 0, scale: 0.9 },
+    visible: {
+      opacity: 1,
+      scale: 1,
+      transition: {
+        duration: 0.6,
+        ease: "easeOut",
+      },
+    },
+  }
+
   return (
     <section className="cta-section relative py-20 bg-gradient-to-br from-blue-900 via-slate-900 to-purple-900 text-white overflow-hidden">
       {/* Flowing Path SVG */}
@@ -37,29 +79,60 @@ const CTASection: React.FC = () => {
 
       <div className="container mx-auto px-6 relative z-10">
         {/* Main Content */}
-        <div className="text-center mb-16">
-          <h2 className="text-4xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-blue-400 via-purple-400 to-cyan-400 bg-clip-text text-transparent">
+        <motion.div 
+          ref={ctaRef}
+          className="text-center mb-16"
+          variants={containerVariants}
+          initial="hidden"
+          animate={ctaInView ? "visible" : "hidden"}>
+          <motion.h2 
+            className="text-4xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-blue-400 via-purple-400 to-cyan-400 bg-clip-text text-transparent"
+            variants={itemVariants}>
             Try Standeva today.
-          </h2>
-          <p className="text-xl md:text-2xl text-slate-300 max-w-4xl mx-auto leading-relaxed">
+          </motion.h2>
+          <motion.p 
+            className="text-xl md:text-2xl text-slate-300 max-w-4xl mx-auto leading-relaxed"
+            variants={itemVariants}>
             You can start building right away. If you have any questions, feel free to chat with us!
-          </p>
-        </div>
+          </motion.p>
+        </motion.div>
 
         {/* CTA Buttons */}
-        <div className="flex flex-col sm:flex-row gap-6 justify-center items-center mb-16">
-          <button className="group px-8 py-4 bg-gradient-to-r from-blue-600 to-blue-700 text-white font-semibold rounded-xl hover:scale-105 transition-all duration-300 shadow-lg flex items-center gap-3 min-w-64">
+        <motion.div 
+          className="flex flex-col sm:flex-row gap-6 justify-center items-center mb-16"
+          variants={containerVariants}
+          initial="hidden"
+          animate={ctaInView ? "visible" : "hidden"}>
+          <motion.button 
+            className="group px-8 py-4 bg-gradient-to-r from-blue-600 to-blue-700 text-white font-semibold rounded-xl hover:scale-105 transition-all duration-300 shadow-lg flex items-center gap-3 min-w-64"
+            variants={buttonVariants}
+            whileHover={{ 
+              scale: 1.05, 
+              y: -4,
+              boxShadow: "0 20px 25px -5px rgba(0, 0, 0, 0.3)",
+              transition: { duration: 0.2 }
+            }}
+            whileTap={{ scale: 0.98 }}>
             <Code size={20} />
             <span>Get Started with Development</span>
             <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
-          </button>
+          </motion.button>
           
-          <button className="group px-8 py-4 bg-gradient-to-r from-green-600 to-emerald-700 text-white font-semibold rounded-xl hover:scale-105 transition-all duration-300 shadow-lg flex items-center gap-3 min-w-64">
+          <motion.button 
+            className="group px-8 py-4 bg-gradient-to-r from-green-600 to-emerald-700 text-white font-semibold rounded-xl hover:scale-105 transition-all duration-300 shadow-lg flex items-center gap-3 min-w-64"
+            variants={buttonVariants}
+            whileHover={{ 
+              scale: 1.05, 
+              y: -4,
+              boxShadow: "0 20px 25px -5px rgba(0, 0, 0, 0.3)",
+              transition: { duration: 0.2 }
+            }}
+            whileTap={{ scale: 0.98 }}>
             <GraduationCap size={20} />
             <span>Explore Training Programs</span>
             <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
-          </button>
-        </div>
+          </motion.button>
+        </motion.div>
 
         {/* Features Grid */}
         <div className="grid md:grid-cols-3 gap-8 max-w-4xl mx-auto">
