@@ -1,5 +1,4 @@
 import styled from 'styled-components'
-import { motion } from 'framer-motion'
 
 export const SolutionsSection = styled.section`
   padding: 6rem 0;

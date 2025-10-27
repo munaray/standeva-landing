@@ -30,7 +30,7 @@ const processData = {
       icon: Code,
       code: `const stackAnalysis = {
   framework: "Next.js",
-  database: "PostgreSQL", 
+  database: "PostgreSQL",
   apis: ["REST", "GraphQL"],
   deployment: "Vercel"
 }`,
@@ -142,7 +142,7 @@ const Process: React.FC = () => {
           if (!path) return
 
           const pathLength = path.getTotalLength()
-          
+
           if (index < currentStep) {
             path.style.strokeDashoffset = '0'
           } else if (index === currentStep) {
@@ -170,7 +170,7 @@ const Process: React.FC = () => {
 
   const connectionPaths = [
     "M 150 200 Q 250 150 350 200",
-    "M 350 250 Q 400 350 350 450", 
+    "M 350 250 Q 400 350 350 450",
     "M 300 450 Q 200 500 100 450",
     "M 100 400 Q 50 300 100 200"
   ]
@@ -194,7 +194,7 @@ const Process: React.FC = () => {
             {connectionPaths.map((path, index) => (
               <ConnectionPath
                 key={index}
-                ref={(el) => (connectionPathsRef.current[index] = el)}
+                ref={(el) => { connectionPathsRef.current[index] = el; }}
                 d={path}
                 stroke="url(#lineGradient)"
                 strokeWidth="3"
@@ -206,14 +206,14 @@ const Process: React.FC = () => {
 
           {processData.steps.map((step, index) => {
             const IconComponent = step.icon
-            
+
             return (
               <ProcessStep
                 key={step.id}
-                ref={(el) => (stepsRef.current[index] = el)}
+                ref={(el) => { stepsRef.current[index] = el; void 0 }}
                 gridRow={step.gridPosition.row}
                 gridCol={step.gridPosition.col}>
-                
+
                 <StepHexagon>
                   <svg viewBox="0 0 120 120" width="120" height="120">
                     <defs>
@@ -229,7 +229,7 @@ const Process: React.FC = () => {
                       strokeWidth="2"
                     />
                   </svg>
-                  
+
                   <div style={{
                     position: 'absolute',
                     top: '50%',

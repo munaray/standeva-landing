@@ -13,9 +13,10 @@ export const useScrollAnimation = (options: UseScrollAnimationOptions = {}) => {
   const { threshold = 0.1, triggerOnce = true, rootMargin = "0px 0px -100px 0px" } = options;
   const ref = useRef(null);
   const isInView = useInView(ref, {
-    threshold,
-    once: triggerOnce,
-    margin: rootMargin
+		amount: threshold,
+		once: triggerOnce,
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
+		margin: rootMargin as any,
   });
 
   return { ref, isInView };

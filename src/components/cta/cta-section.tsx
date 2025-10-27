@@ -1,7 +1,7 @@
 'use client'
 
 import React from 'react'
-import { motion } from 'framer-motion'
+import { motion, Variants } from 'framer-motion'
 import { useScrollAnimation } from '@/hooks/use-scroll-animation'
 import { ArrowRight, Code, GraduationCap } from 'lucide-react'
 
@@ -11,7 +11,7 @@ const CTASection: React.FC = () => {
     triggerOnce: false
   })
 
-  const containerVariants = {
+  const containerVariants: Variants = {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
@@ -22,32 +22,32 @@ const CTASection: React.FC = () => {
     },
   }
 
-  const itemVariants = {
+  const itemVariants: Variants = {
     hidden: { opacity: 0, y: 40 },
     visible: {
       opacity: 1,
       y: 0,
       transition: {
         duration: 0.8,
-        ease: "easeOut",
+        ease: [0.25, 0.46, 0.45, 0.94],
       },
     },
   }
 
-  const buttonVariants = {
+  const buttonVariants: Variants = {
     hidden: { opacity: 0, scale: 0.9 },
     visible: {
       opacity: 1,
       scale: 1,
       transition: {
         duration: 0.6,
-        ease: "easeOut",
+        ease: [0.25, 0.46, 0.45, 0.94],
       },
     },
   }
 
   return (
-    <section className="cta-section relative py-16 sm:py-20 bg-gradient-to-br from-blue-900 via-slate-900 to-purple-900 text-white overflow-hidden">
+    <section className="cta-section relative py-16 sm:py-20 bg-linear-to-br from-blue-900 via-slate-900 to-purple-900 text-white overflow-hidden">
       {/* Flowing Path SVG */}
       <svg
         className="absolute top-0 left-0 w-full h-full pointer-events-none opacity-30"
@@ -79,18 +79,18 @@ const CTASection: React.FC = () => {
 
       <div className="container mx-auto px-4 sm:px-6 relative z-10">
         {/* Main Content */}
-        <motion.div 
+        <motion.div
           ref={ctaRef}
           className="text-center mb-12 sm:mb-16"
           variants={containerVariants}
           initial="hidden"
           animate={ctaInView ? "visible" : "hidden"}>
-          <motion.h2 
-            className="text-3xl sm:text-4xl md:text-6xl font-bold mb-4 sm:mb-6 bg-gradient-to-r from-blue-400 via-purple-400 to-cyan-400 bg-clip-text text-transparent leading-tight"
+          <motion.h2
+            className="text-3xl sm:text-4xl md:text-6xl font-bold mb-4 sm:mb-6 bg-linear-to-r from-blue-400 via-purple-400 to-cyan-400 bg-clip-text text-transparent leading-tight"
             variants={itemVariants}>
             Try Standeva today.
           </motion.h2>
-          <motion.p 
+          <motion.p
             className="text-lg sm:text-xl md:text-2xl text-slate-300 max-w-4xl mx-auto leading-relaxed px-4"
             variants={itemVariants}>
             You can start building right away. If you have any questions, feel free to chat with us!
@@ -98,16 +98,16 @@ const CTASection: React.FC = () => {
         </motion.div>
 
         {/* CTA Buttons */}
-        <motion.div 
+        <motion.div
           className="flex flex-col sm:flex-row gap-4 sm:gap-6 justify-center items-center mb-12 sm:mb-16 px-4"
           variants={containerVariants}
           initial="hidden"
           animate={ctaInView ? "visible" : "hidden"}>
-          <motion.button 
-            className="group w-full sm:w-auto px-6 py-3 sm:px-8 sm:py-4 bg-gradient-to-r from-blue-600 to-blue-700 text-white font-semibold rounded-xl hover:scale-105 active:scale-95 transition-all duration-300 shadow-lg flex items-center justify-center gap-2 sm:gap-3 min-w-0 sm:min-w-64 text-sm sm:text-base touch-manipulation"
+          <motion.button
+            className="group w-full sm:w-auto px-6 py-3 sm:px-8 sm:py-4 bg-linear-to-r from-blue-600 to-blue-700 text-white font-semibold rounded-xl hover:scale-105 active:scale-95 transition-all duration-300 shadow-lg flex items-center justify-center gap-2 sm:gap-3 min-w-0 sm:min-w-64 text-sm sm:text-base touch-manipulation"
             variants={buttonVariants}
-            whileHover={{ 
-              scale: 1.05, 
+            whileHover={{
+              scale: 1.05,
               y: -4,
               boxShadow: "0 20px 25px -5px rgba(0, 0, 0, 0.3)",
               transition: { duration: 0.2 }
@@ -117,12 +117,12 @@ const CTASection: React.FC = () => {
             <span>Get Started with Development</span>
             <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform sm:w-4 sm:h-4" />
           </motion.button>
-          
-          <motion.button 
-            className="group w-full sm:w-auto px-6 py-3 sm:px-8 sm:py-4 bg-gradient-to-r from-green-600 to-emerald-700 text-white font-semibold rounded-xl hover:scale-105 active:scale-95 transition-all duration-300 shadow-lg flex items-center justify-center gap-2 sm:gap-3 min-w-0 sm:min-w-64 text-sm sm:text-base touch-manipulation"
+
+          <motion.button
+            className="group w-full sm:w-auto px-6 py-3 sm:px-8 sm:py-4 bg-linear-to-r from-green-600 to-emerald-700 text-white font-semibold rounded-xl hover:scale-105 active:scale-95 transition-all duration-300 shadow-lg flex items-center justify-center gap-2 sm:gap-3 min-w-0 sm:min-w-64 text-sm sm:text-base touch-manipulation"
             variants={buttonVariants}
-            whileHover={{ 
-              scale: 1.05, 
+            whileHover={{
+              scale: 1.05,
               y: -4,
               boxShadow: "0 20px 25px -5px rgba(0, 0, 0, 0.3)",
               transition: { duration: 0.2 }
@@ -137,7 +137,7 @@ const CTASection: React.FC = () => {
         {/* Features Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6 md:gap-8 max-w-4xl mx-auto px-4">
           <div className="text-center p-4 sm:p-6 bg-white/5 backdrop-blur-sm rounded-xl sm:rounded-2xl border border-white/10">
-            <div className="w-12 h-12 sm:w-16 sm:h-16 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-xl flex items-center justify-center mx-auto mb-3 sm:mb-4">
+            <div className="w-12 h-12 sm:w-16 sm:h-16 bg-linear-to-br from-blue-500 to-cyan-500 rounded-xl flex items-center justify-center mx-auto mb-3 sm:mb-4">
               <Code size={20} className="text-white sm:w-7 sm:h-7" />
             </div>
             <h3 className="text-lg sm:text-xl font-semibold mb-2">Custom Development</h3>
@@ -145,7 +145,7 @@ const CTASection: React.FC = () => {
           </div>
 
           <div className="text-center p-4 sm:p-6 bg-white/5 backdrop-blur-sm rounded-xl sm:rounded-2xl border border-white/10">
-            <div className="w-12 h-12 sm:w-16 sm:h-16 bg-gradient-to-br from-purple-500 to-pink-500 rounded-xl flex items-center justify-center mx-auto mb-3 sm:mb-4">
+            <div className="w-12 h-12 sm:w-16 sm:h-16 bg-linear-to-br from-purple-500 to-pink-500 rounded-xl flex items-center justify-center mx-auto mb-3 sm:mb-4">
               <GraduationCap size={20} className="text-white sm:w-7 sm:h-7" />
             </div>
             <h3 className="text-lg sm:text-xl font-semibold mb-2">Expert Training</h3>
@@ -153,7 +153,7 @@ const CTASection: React.FC = () => {
           </div>
 
           <div className="text-center p-4 sm:p-6 bg-white/5 backdrop-blur-sm rounded-xl sm:rounded-2xl border border-white/10">
-            <div className="w-12 h-12 sm:w-16 sm:h-16 bg-gradient-to-br from-green-500 to-emerald-500 rounded-xl flex items-center justify-center mx-auto mb-3 sm:mb-4">
+            <div className="w-12 h-12 sm:w-16 sm:h-16 bg-linear-to-br from-green-500 to-emerald-500 rounded-xl flex items-center justify-center mx-auto mb-3 sm:mb-4">
               <svg className="w-5 h-5 sm:w-7 sm:h-7 text-white" fill="currentColor" viewBox="0 0 20 20">
                 <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
               </svg>

@@ -98,7 +98,7 @@ const trainingPrograms = [
 
 const TrainingPrograms: React.FC = () => {
   return (
-    <section className="py-20 bg-gradient-to-br from-slate-50 to-indigo-50">
+    <section className="py-20 bg-linear-to-br from-slate-50 to-indigo-50">
       <div className="container mx-auto px-6">
         {/* Header */}
         <div className="text-center mb-16">
@@ -117,7 +117,7 @@ const TrainingPrograms: React.FC = () => {
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
           {trainingPrograms.map((program, index) => {
             const IconComponent = program.icon
-            
+
             return (
               <div
                 key={program.id}
@@ -128,7 +128,7 @@ const TrainingPrograms: React.FC = () => {
               >
                 {/* Header */}
                 <div className="flex items-start justify-between mb-6">
-                  <div className={`w-14 h-14 rounded-xl bg-gradient-to-br ${program.gradient} flex items-center justify-center shadow-lg`}>
+                  <div className={`w-14 h-14 rounded-xl bg-linear-to-br ${program.gradient} flex items-center justify-center shadow-lg`}>
                     <IconComponent size={28} className="text-white" />
                   </div>
                   <div className={`px-3 py-1 rounded-full text-sm font-medium ${program.levelColor}`}>
@@ -167,14 +167,14 @@ const TrainingPrograms: React.FC = () => {
                 <div className="space-y-2 mb-6">
                   {program.highlights.map((highlight, highlightIndex) => (
                     <div key={highlightIndex} className="flex items-start gap-2">
-                      <Star size={14} className="text-yellow-500 mt-0.5 flex-shrink-0" />
+                      <Star size={14} className="text-yellow-500 mt-0.5 shrink-0" />
                       <p className="text-sm text-slate-600">{highlight}</p>
                     </div>
                   ))}
                 </div>
 
                 {/* Button */}
-                <button className={`w-full flex items-center justify-center gap-2 px-6 py-3 rounded-xl font-semibold text-white bg-gradient-to-r ${program.gradient} hover:scale-105 transition-transform duration-300 shadow-lg`}>
+                <button className={`w-full flex items-center justify-center gap-2 px-6 py-3 rounded-xl font-semibold text-white bg-linear-to-r ${program.gradient} hover:scale-105 transition-transform duration-300 shadow-lg`}>
                   {program.id === 'corporate-training' ? 'Contact Us' : 'Enroll Now'}
                   <ArrowRight size={16} />
                 </button>
@@ -191,7 +191,7 @@ const TrainingPrograms: React.FC = () => {
           <p className="text-slate-600 mb-6">
             Schedule a free consultation with our education team to find the perfect learning path for your goals.
           </p>
-          <button className="px-8 py-4 bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-semibold rounded-xl hover:scale-105 transition-transform duration-300 shadow-lg">
+          <button className="px-8 py-4 bg-linear-to-r from-indigo-600 to-purple-600 text-white font-semibold rounded-xl hover:scale-105 transition-transform duration-300 shadow-lg">
             Schedule Free Consultation
           </button>
         </div>

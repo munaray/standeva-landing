@@ -1,7 +1,7 @@
 'use client'
 
 import React from 'react'
-import { motion } from 'framer-motion'
+import { motion, Variants } from 'framer-motion'
 import { useScrollAnimation } from '@/hooks/use-scroll-animation'
 import { Star, Quote, ArrowRight } from 'lucide-react'
 
@@ -62,19 +62,19 @@ const SuccessStories: React.FC = () => {
     triggerOnce: false
   })
 
-  const headerVariants = {
+  const headerVariants: Variants = {
     hidden: { opacity: 0, y: 40 },
     visible: {
       opacity: 1,
       y: 0,
       transition: {
         duration: 0.8,
-        ease: "easeOut",
+        ease: [0.25, 0.46, 0.45, 0.94],
       },
     },
   }
 
-  const containerVariants = {
+  const containerVariants: Variants = {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
@@ -85,9 +85,9 @@ const SuccessStories: React.FC = () => {
     },
   }
 
-  const cardVariants = {
-    hidden: { 
-      opacity: 0, 
+  const cardVariants: Variants = {
+    hidden: {
+      opacity: 0,
       y: 60,
       scale: 0.95,
     },
@@ -97,28 +97,17 @@ const SuccessStories: React.FC = () => {
       scale: 1,
       transition: {
         duration: 0.7,
-        ease: "easeOut",
+        ease: [0.25, 0.46, 0.45, 0.94],
       },
     },
   }
 
-  const statsVariants = {
-    hidden: { opacity: 0, scale: 0.8 },
-    visible: {
-      opacity: 1,
-      scale: 1,
-      transition: {
-        duration: 0.6,
-        ease: "easeOut",
-      },
-    },
-  }
 
   return (
     <section className="success-stories-section py-20 bg-slate-800 text-white">
       <div className="container mx-auto px-6">
         {/* Header */}
-        <motion.div 
+        <motion.div
           ref={headerRef}
           className="text-center mb-16"
           variants={headerVariants}
@@ -128,7 +117,7 @@ const SuccessStories: React.FC = () => {
             CUSTOMER STORIES
           </p>
           <h2 className="text-4xl md:text-5xl font-bold mb-6">
-            You're in good hands with us
+            You&apos;re in good hands with us
           </h2>
           <p className="text-xl text-slate-300 max-w-3xl mx-auto">
             From startups to enterprises, see how Standeva has helped companies build better software and train stronger development teams
@@ -136,7 +125,7 @@ const SuccessStories: React.FC = () => {
         </motion.div>
 
         {/* Testimonials Grid */}
-        <motion.div 
+        <motion.div
           ref={testimonialsRef}
           className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8 mb-12 sm:mb-16"
           variants={containerVariants}
@@ -147,7 +136,7 @@ const SuccessStories: React.FC = () => {
               key={testimonial.id}
               className="bg-slate-700 rounded-2xl p-4 sm:p-6 md:p-8 border border-slate-600 hover:border-blue-500 transition-all duration-300"
               variants={cardVariants}
-              whileHover={{ 
+              whileHover={{
                 y: -8,
                 scale: 1.02,
                 transition: { duration: 0.3 }
@@ -166,7 +155,7 @@ const SuccessStories: React.FC = () => {
 
               {/* Testimonial Text */}
               <p className="text-sm sm:text-base text-slate-300 leading-relaxed mb-4 sm:mb-6">
-                "{testimonial.testimonial}"
+                &ldquo;{testimonial.testimonial}&rdquo;
               </p>
 
               {/* Project & Results */}
@@ -186,7 +175,7 @@ const SuccessStories: React.FC = () => {
 
               {/* Author */}
               <div className="flex items-center gap-2 sm:gap-3">
-                <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-lg sm:text-2xl">
+                <div className="w-10 h-10 sm:w-12 sm:h-12 bg-linear-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-lg sm:text-2xl">
                   {testimonial.avatar}
                 </div>
                 <div>
@@ -203,23 +192,23 @@ const SuccessStories: React.FC = () => {
         </motion.div>
 
         {/* Stats Section */}
-        <motion.div 
+        <motion.div
           ref={statsRef}
           className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6 md:gap-8 mb-12 sm:mb-16"
           variants={containerVariants}
           initial="hidden"
           animate={statsInView ? "visible" : "hidden"}>
           {stats.map((stat, index) => (
-            <motion.div 
-              key={index} 
+            <motion.div
+              key={index}
               className="text-center"
               variants={cardVariants}>
-              <motion.div 
+              <motion.div
                 className="text-2xl sm:text-3xl md:text-4xl font-bold text-blue-400 mb-1 sm:mb-2"
                 initial={{ scale: 0 }}
                 animate={statsInView ? { scale: 1 } : { scale: 0 }}
-                transition={{ 
-                  duration: 0.6, 
+                transition={{
+                  duration: 0.6,
                   delay: index * 0.1,
                   ease: "easeOut"
                 }}>

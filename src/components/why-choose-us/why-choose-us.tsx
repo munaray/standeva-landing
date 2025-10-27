@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { motion } from "framer-motion";
+import { motion, Variants } from "framer-motion";
 import { useScrollAnimation } from "@/hooks/use-scroll-animation";
 import {
 	ArrowRight,
@@ -68,14 +68,14 @@ const useCases = [
 ];
 
 const UseCaseItem: React.FC<{
-	useCase: typeof useCases[0];
+	useCase: (typeof useCases)[0];
 	isReversed: boolean;
-	leftSlideVariants: any;
-	rightSlideVariants: any;
+	leftSlideVariants: Variants;
+	rightSlideVariants: Variants;
 }> = ({ useCase, isReversed, leftSlideVariants, rightSlideVariants }) => {
 	const { ref: caseRef, isInView: caseInView } = useScrollAnimation({
 		threshold: 0.3,
-		triggerOnce: false
+		triggerOnce: false,
 	});
 	const IconComponent = useCase.icon;
 
@@ -93,7 +93,7 @@ const UseCaseItem: React.FC<{
 				<div>
 					<div className="flex items-center gap-3 sm:gap-4 mb-3 sm:mb-4">
 						<div
-							className={`w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-gradient-to-br ${useCase.gradient} flex items-center justify-center shadow-lg`}>
+							className={`w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-linear-to-br ${useCase.gradient} flex items-center justify-center shadow-lg`}>
 							<IconComponent
 								size={20}
 								className="text-white sm:w-6 sm:h-6"
@@ -116,25 +116,23 @@ const UseCaseItem: React.FC<{
 
 				{/* Features List */}
 				<div className="space-y-2 sm:space-y-3">
-					{useCase.features.map(
-						(feature, featureIndex) => (
-							<div
-								key={featureIndex}
-								className="flex items-start gap-3">
-								<div className="w-6 h-6 rounded-full bg-green-100 flex items-center justify-center flex-shrink-0 mt-0.5">
-									<div className="w-2 h-2 bg-green-500 rounded-full" />
-								</div>
-								<p className="text-sm sm:text-base text-slate-700">
-									{feature}
-								</p>
+					{useCase.features.map((feature, featureIndex) => (
+						<div
+							key={featureIndex}
+							className="flex items-start gap-3">
+							<div className="w-6 h-6 rounded-full bg-green-100 flex items-center justify-center shrink-0 mt-0.5">
+								<div className="w-2 h-2 bg-green-500 rounded-full" />
 							</div>
-						)
-					)}
+							<p className="text-sm sm:text-base text-slate-700">
+								{feature}
+							</p>
+						</div>
+					))}
 				</div>
 
 				{/* Button */}
 				<motion.button
-					className={`inline-flex items-center gap-2 px-4 py-2 sm:px-6 sm:py-3 bg-gradient-to-r ${useCase.gradient} text-white font-semibold rounded-xl hover:scale-105 transition-transform duration-300 shadow-lg text-sm sm:text-base`}
+					className={`inline-flex items-center gap-2 px-4 py-2 sm:px-6 sm:py-3 bg-linear-to-r ${useCase.gradient} text-white font-semibold rounded-xl hover:scale-105 transition-transform duration-300 shadow-lg text-sm sm:text-base`}
 					whileHover={{ scale: 1.05, y: -2 }}
 					whileTap={{ scale: 0.98 }}>
 					{useCase.buttonText}
@@ -145,7 +143,7 @@ const UseCaseItem: React.FC<{
 			{/* Visual Side */}
 			<div className="flex-1 w-full max-w-sm sm:max-w-md lg:max-w-lg">
 				<div
-					className={`relative p-4 sm:p-6 lg:p-8 bg-gradient-to-br ${useCase.gradient} rounded-2xl shadow-xl`}>
+					className={`relative p-4 sm:p-6 lg:p-8 bg-linear-to-br ${useCase.gradient} rounded-2xl shadow-xl`}>
 					{/* Main Image/Icon */}
 					<div className="text-center mb-4 sm:mb-6">
 						<div className="text-5xl sm:text-6xl lg:text-8xl mb-3 sm:mb-4">
@@ -197,50 +195,50 @@ const UseCaseItem: React.FC<{
 const WhyChooseUs: React.FC = () => {
 	const { ref: headerRef, isInView: headerInView } = useScrollAnimation({
 		threshold: 0.3,
-		triggerOnce: false
+		triggerOnce: false,
 	});
 
-	const headerVariants = {
+	const headerVariants: Variants = {
 		hidden: { opacity: 0, y: 40 },
 		visible: {
 			opacity: 1,
 			y: 0,
 			transition: {
 				duration: 0.8,
-				ease: "easeOut",
+				ease: [0.25, 0.46, 0.45, 0.94],
 			},
 		},
 	};
 
-	const leftSlideVariants = {
+	const leftSlideVariants: Variants = {
 		hidden: { opacity: 0, x: -80 },
 		visible: {
 			opacity: 1,
 			x: 0,
 			transition: {
 				duration: 0.8,
-				ease: "easeOut",
+				ease: [0.25, 0.46, 0.45, 0.94],
 			},
 		},
 	};
 
-	const rightSlideVariants = {
+	const rightSlideVariants: Variants = {
 		hidden: { opacity: 0, x: 80 },
 		visible: {
 			opacity: 1,
 			x: 0,
 			transition: {
 				duration: 0.8,
-				ease: "easeOut",
+				ease: [0.25, 0.46, 0.45, 0.94],
 			},
 		},
 	};
 
 	return (
-		<section className="why-choose-us-section py-20 bg-gradient-to-br from-slate-50 to-blue-50">
+		<section className="why-choose-us-section py-20 bg-linear-to-br from-slate-50 to-blue-50">
 			<div className="container mx-auto px-6">
 				{/* Header */}
-				<motion.div 
+				<motion.div
 					ref={headerRef}
 					className="text-center mb-16"
 					variants={headerVariants}
@@ -262,7 +260,6 @@ const WhyChooseUs: React.FC = () => {
 				{/* Use Cases */}
 				<div className="space-y-8 sm:space-y-12 max-w-6xl mx-auto">
 					{useCases.map((useCase, index) => {
-						const IconComponent = useCase.icon;
 						const isReversed = index % 2 === 1;
 
 						return (
@@ -279,7 +276,7 @@ const WhyChooseUs: React.FC = () => {
 
 				{/* Bottom CTA */}
 				<div className="text-center mt-12 sm:mt-16">
-					<div className="p-6 sm:p-8 bg-gradient-to-r from-slate-50 to-blue-50 rounded-2xl max-w-4xl mx-auto">
+					<div className="p-6 sm:p-8 bg-linear-to-r from-slate-50 to-blue-50 rounded-2xl max-w-4xl mx-auto">
 						<h3 className="text-xl sm:text-2xl font-bold text-slate-900 mb-3 sm:mb-4">
 							Ready to get started?
 						</h3>

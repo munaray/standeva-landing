@@ -201,111 +201,127 @@ const Solutions: React.FC = () => {
   }
 
   return (
-    <SolutionsSection ref={sectionRef}>
-      {/* Parallax Background Elements */}
-      <div
-        ref={parallaxBgRef}
-        style={{
-          position: 'absolute',
-          top: '10%',
-          left: '5%',
-          width: '200px',
-          height: '200px',
-          background: 'radial-gradient(circle, rgba(59, 130, 246, 0.1) 0%, transparent 70%)',
-          borderRadius: '50%',
-          pointerEvents: 'none',
-          zIndex: 1,
-        }}
-      />
-      
-      <div
-        ref={parallaxOrb1Ref}
-        style={{
-          position: 'absolute',
-          top: '20%',
-          right: '10%',
-          width: '150px',
-          height: '150px',
-          background: 'radial-gradient(circle, rgba(139, 92, 246, 0.08) 0%, transparent 70%)',
-          borderRadius: '50%',
-          pointerEvents: 'none',
-          zIndex: 1,
-        }}
-      />
+		<SolutionsSection ref={sectionRef}>
+			{/* Parallax Background Elements */}
+			<div
+				ref={parallaxBgRef}
+				style={{
+					position: "absolute",
+					top: "10%",
+					left: "5%",
+					width: "200px",
+					height: "200px",
+					background:
+						"radial-gradient(circle, rgba(59, 130, 246, 0.1) 0%, transparent 70%)",
+					borderRadius: "50%",
+					pointerEvents: "none",
+					zIndex: 1,
+				}}
+			/>
 
-      <div
-        ref={parallaxOrb2Ref}
-        style={{
-          position: 'absolute',
-          bottom: '15%',
-          left: '15%',
-          width: '120px',
-          height: '120px',
-          background: 'radial-gradient(circle, rgba(34, 197, 94, 0.06) 0%, transparent 70%)',
-          borderRadius: '50%',
-          pointerEvents: 'none',
-          zIndex: 1,
-        }}
-      />
+			<div
+				ref={parallaxOrb1Ref}
+				style={{
+					position: "absolute",
+					top: "20%",
+					right: "10%",
+					width: "150px",
+					height: "150px",
+					background:
+						"radial-gradient(circle, rgba(139, 92, 246, 0.08) 0%, transparent 70%)",
+					borderRadius: "50%",
+					pointerEvents: "none",
+					zIndex: 1,
+				}}
+			/>
 
-      <SolutionsContainer>
-        <SolutionsHeader>
-          <SolutionsTitle ref={titleRef}>
-            Got specific needs? We're here to help
-          </SolutionsTitle>
-          <SolutionsSubtitle ref={subtitleRef}>
-            Choose the approach that fits your development style and business requirements
-          </SolutionsSubtitle>
-        </SolutionsHeader>
+			<div
+				ref={parallaxOrb2Ref}
+				style={{
+					position: "absolute",
+					bottom: "15%",
+					left: "15%",
+					width: "120px",
+					height: "120px",
+					background:
+						"radial-gradient(circle, rgba(34, 197, 94, 0.06) 0%, transparent 70%)",
+					borderRadius: "50%",
+					pointerEvents: "none",
+					zIndex: 1,
+				}}
+			/>
 
-        <SolutionsGrid>
-          {solutionsData.map((solution, index) => (
-            <SolutionCard
-              key={solution.id}
-              ref={(el) => (cardsRef.current[index] = el)}
-              as={motion.div}
-              whileHover={{ 
-                scale: 1.02,
-                boxShadow: '0 20px 40px rgba(59, 130, 246, 0.15)'
-              }}
-              transition={{ duration: 0.3 }}>
-              
-              <CardHeader>
-                <CardBadge>{solution.badge}</CardBadge>
-                <CardTitle>{solution.title}</CardTitle>
-                <CardDescription>{solution.description}</CardDescription>
-              </CardHeader>
+			<SolutionsContainer>
+				<SolutionsHeader>
+					<SolutionsTitle ref={titleRef}>
+						Got specific needs? We&apos;re here to help
+					</SolutionsTitle>
+					<SolutionsSubtitle ref={subtitleRef}>
+						Choose the approach that fits your development style and
+						business requirements
+					</SolutionsSubtitle>
+				</SolutionsHeader>
 
-              <FeaturesList>
-                {solution.features.map((feature, featureIndex) => {
-                  const IconComponent = feature.icon
-                  return (
-                    <FeatureItem key={featureIndex} data-feature>
-                      <FeatureIcon>
-                        <IconComponent size={16} />
-                      </FeatureIcon>
-                      <FeatureText>{feature.text}</FeatureText>
-                    </FeatureItem>
-                  )
-                })}
-              </FeaturesList>
+				<SolutionsGrid>
+					{solutionsData.map((solution, index) => (
+						<SolutionCard
+							key={solution.id}
+							ref={(el) => {
+								cardsRef.current[index] = el;
+							}}
+							as={motion.div}
+							whileHover={{
+								scale: 1.02,
+								boxShadow:
+									"0 20px 40px rgba(59, 130, 246, 0.15)",
+							}}
+							transition={{ duration: 0.3 }}>
+							<CardHeader>
+								<CardBadge>{solution.badge}</CardBadge>
+								<CardTitle>{solution.title}</CardTitle>
+								<CardDescription>
+									{solution.description}
+								</CardDescription>
+							</CardHeader>
 
-              <CardButton
-                as={motion.button}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.98 }}
-                style={{ backgroundColor: solution.buttonColor }}>
-                {solution.buttonText}
-                <ButtonIcon>
-                  <ArrowRight size={16} />
-                </ButtonIcon>
-              </CardButton>
-            </SolutionCard>
-          ))}
-        </SolutionsGrid>
-      </SolutionsContainer>
-    </SolutionsSection>
-  )
+							<FeaturesList>
+								{solution.features.map(
+									(feature, featureIndex) => {
+										const IconComponent = feature.icon;
+										return (
+											<FeatureItem
+												key={featureIndex}
+												data-feature>
+												<FeatureIcon>
+													<IconComponent size={16} />
+												</FeatureIcon>
+												<FeatureText>
+													{feature.text}
+												</FeatureText>
+											</FeatureItem>
+										);
+									}
+								)}
+							</FeaturesList>
+
+							<CardButton
+								as={motion.button}
+								whileHover={{ scale: 1.05 }}
+								whileTap={{ scale: 0.98 }}
+								style={{
+									backgroundColor: solution.buttonColor,
+								}}>
+								{solution.buttonText}
+								<ButtonIcon>
+									<ArrowRight size={16} />
+								</ButtonIcon>
+							</CardButton>
+						</SolutionCard>
+					))}
+				</SolutionsGrid>
+			</SolutionsContainer>
+		</SolutionsSection>
+  );
 }
 
 export default Solutions
