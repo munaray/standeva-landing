@@ -1,6 +1,8 @@
 "use client";
 
 import React from "react";
+import { motion } from "framer-motion";
+import { useScrollAnimation } from "@/hooks/use-scroll-animation";
 import {
 	ArrowRight,
 	Code,
@@ -69,6 +71,55 @@ const servicesData = [
 ];
 
 const Services: React.FC = () => {
+	const { ref: headerRef, isInView: headerInView } = useScrollAnimation({
+		threshold: 0.3,
+		triggerOnce: false
+	});
+	const { ref: cardsRef, isInView: cardsInView } = useScrollAnimation({
+		threshold: 0.2,
+		triggerOnce: false
+	});
+
+	const containerVariants = {
+		hidden: { opacity: 0 },
+		visible: {
+			opacity: 1,
+			transition: {
+				staggerChildren: 0.3,
+				delayChildren: 0.2,
+			},
+		},
+	};
+
+	const cardVariants = {
+		hidden: { 
+			opacity: 0, 
+			y: 60,
+			scale: 0.95,
+		},
+		visible: {
+			opacity: 1,
+			y: 0,
+			scale: 1,
+			transition: {
+				duration: 0.8,
+				ease: "easeOut",
+			},
+		},
+	};
+
+	const headerVariants = {
+		hidden: { opacity: 0, y: 40 },
+		visible: {
+			opacity: 1,
+			y: 0,
+			transition: {
+				duration: 0.8,
+				ease: "easeOut",
+			},
+		},
+	};
+
 	return (
 		<section className="services-section relative py-20 bg-gradient-to-br from-slate-50 to-blue-50 overflow-hidden">
 			{/* Background Elements */}
@@ -78,7 +129,12 @@ const Services: React.FC = () => {
 
 			<div className="container mx-auto px-6 relative z-10">
 				{/* Header */}
-				<div className="text-center mb-16">
+				<motion.div 
+					ref={headerRef}
+					className="text-center mb-16"
+					variants={headerVariants}
+					initial="hidden"
+					animate={headerInView ? "visible" : "hidden"}>
 					<p className="text-sm uppercase tracking-wide text-blue-600 font-semibold mb-4">
 						SOLUTIONS
 					</p>
@@ -89,14 +145,25 @@ const Services: React.FC = () => {
 						Choose the approach that fits your development style and
 						business requirements
 					</p>
-				</div>
+				</motion.div>
 
 				{/* Services Grid */}
-				<div className="grid md:grid-cols-2 gap-8 max-w-6xl mx-auto">
-					{servicesData.map((service, index) => (
-						<div
+				<motion.div 
+					ref={cardsRef}
+					className="grid md:grid-cols-2 gap-8 max-w-6xl mx-auto"
+					variants={containerVariants}
+					initial="hidden"
+					animate={cardsInView ? "visible" : "hidden"}>
+					{servicesData.map((service) => (
+						<motion.div
 							key={service.id}
-							className="bg-white rounded-2xl p-8 shadow-lg border border-slate-200 hover:shadow-xl transition-all duration-300 hover:scale-105">
+							className="bg-white rounded-2xl p-8 shadow-lg border border-slate-200 hover:shadow-xl transition-all duration-300 hover:scale-105"
+							variants={cardVariants}
+							whileHover={{ 
+								scale: 1.02,
+								y: -8,
+								transition: { duration: 0.3 }
+							}}>
 							{/* Card Header */}
 							<div className="mb-8">
 								<div className="inline-block px-4 py-2 bg-blue-50 text-blue-700 text-sm font-medium rounded-full mb-4">
@@ -143,9 +210,9 @@ const Services: React.FC = () => {
 								{service.buttonText}
 								<ArrowRight size={16} />
 							</button>
-						</div>
+						</motion.div>
 					))}
-				</div>
+				</motion.div>
 			</div>
 		</section>
 	);
